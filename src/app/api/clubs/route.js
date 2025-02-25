@@ -18,3 +18,65 @@ export async function GET(request) {
     });
   }
 }
+
+export async function POST(request) {
+  const { name, city } = await request.json();
+
+  try {
+    const club = await prisma.club.create({
+      data: { name, city },
+    });
+    console.log("Club created in database:", club);
+
+    return new Response(JSON.stringify(club), {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error creating club:", error);
+    return new Response(JSON.stringify({ error: "Error creating club" }), {
+      status: 500,
+    });
+  }
+}
+
+export async function PUT(request) {
+  const { id, name, city } = await request.json();
+
+  try {
+    const club = await prisma.club.update({
+      where: { id },
+      data: { name, city },
+    });
+    console.log("Club updated in database:", club);
+
+    return new Response(JSON.stringify(club), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error updating club:", error);
+    return new Response(JSON.stringify({ error: "Error updating club" }), {
+      status: 500,
+    });
+  }
+}
+
+export async function DELETE(request) {
+  const { id } = await request.json();
+
+  try {
+    const club = await prisma.club.delete({ where: { id } });
+    console.log("Club deleted from database:", club);
+
+    return new Response(JSON.stringify(club), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error deleting club:", error);
+    return new Response(JSON.stringify({ error: "Error deleting club" }), {
+      status: 500,
+    });
+  }
+}
