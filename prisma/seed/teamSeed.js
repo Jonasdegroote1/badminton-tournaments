@@ -1,10 +1,9 @@
-// prisma/seed/teamSeed.js
-
 module.exports = async (prisma) => {
-  // Fetch existing Players, Pools, and Strengths
+  // Fetch existing Players, Pools, Strengths, and Tournaments
   const players = await prisma.player.findMany();
-  const pools = await prisma.pool.findMany();
+  const pools = await prisma.poule.findMany(); // Poules instead of Pools
   const strengths = await prisma.strength.findMany();
+  const tournaments = await prisma.tournament.findMany();
 
   if (players.length < 2) {
     console.log('Not enough players to form teams!');
@@ -27,8 +26,9 @@ module.exports = async (prisma) => {
     const team = {
       player1Id: player1.id,
       player2Id: player2.id,
-      poolId: pools[Math.floor(Math.random() * pools.length)].id, // Randomly assign pool
-      strengthId: strengths[Math.floor(Math.random() * strengths.length)].id, // Randomly assign strength
+      pouleId: pools[Math.floor(Math.random() * pools.length)].id, // Corrected to pouleId
+      strengthId: strengths[Math.floor(Math.random() * strengths.length)].id, 
+      tournamentId: tournaments[Math.floor(Math.random() * tournaments.length)].id, 
     };
 
     teams.push(team);
