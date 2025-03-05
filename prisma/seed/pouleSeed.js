@@ -1,24 +1,31 @@
-// prisma/seed/poolSeed.js
-
 module.exports = async (prisma) => {
-  // First, seed some Strengths (or fetch existing ones)
+  // Haal bestaande Strengths op
   const strengths = await prisma.strength.findMany();
   
-  const numberOfPoules = 2; // Number of poules to create
+  // Haal bestaande Toernooien op
+  const tournaments = await prisma.tournament.findMany();
+
+  if (strengths.length === 0 || tournaments.length === 0) {
+    console.log('Er zijn geen Strengths of Toernooien. Zorg ervoor dat ze eerst worden gezaaid!');
+    return;
+  }
+
+  const numberOfPoules = 2; // Aantal poules om te creëren
   const poules = [];
   
-  // Generate the poules
+  // Genereer de poules
   for (let i = 0; i < numberOfPoules; i++) {
     const poule = {
       name: `Poule ${i + 1}`,
-      strengthId: strengths[Math.floor(Math.random() * strengths.length)].id, // Randomly assign a strengthId
+      strengthId: strengths[Math.floor(Math.random() * strengths.length)].id, // Willekeurig strengthId toewijzen
+      tournamentId: tournaments[Math.floor(Math.random() * tournaments.length)].id, // Willekeurig tournamentId toewijzen
     };
     poules.push(poule);
   }
 
-  // Create poules in the database
+  // Maak de poules aan in de database
   for (const poule of poules) {
-    await prisma.pool.create({
+    await prisma.poule.create({  // Zorg ervoor dat hier 'poule' is, en niet 'pool'
       data: poule
     });
   }
