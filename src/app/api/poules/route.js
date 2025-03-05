@@ -4,14 +4,14 @@ export async function GET(request) {
   console.log("API request received");
 
   try {
-    const poules = await prisma.pool.findMany({
+    const poules = await prisma.poule.findMany({
       include: {
         teams: {
           include: {
             player1: true,
             player2: true,
             strength: true,
-            pool: true
+            poule: true
           }
         }
       }
@@ -35,7 +35,7 @@ export async function POST(request) {
 
 const { name, strengthId } = await request.json();
   try {
-    const poule = await prisma.pool.create({
+    const poule = await prisma.poule.create({
       data: {
         name,
         strengthId
@@ -61,7 +61,7 @@ export async function PUT(request) {
   const { id, name, strengthId } = await request.json();
 
   try {
-    const poule = await prisma.pool.update({
+    const poule = await prisma.poule.update({
       where: { id },
       data: { 
         name,
@@ -88,7 +88,7 @@ export async function DELETE(request) {
   const { id } = await request.json();
 
   try {
-    const poule = await prisma.pool.delete({
+    const poule = await prisma.poule.delete({
       where: { id }
     });
     console.log("Poule deleted from database:", poule);
