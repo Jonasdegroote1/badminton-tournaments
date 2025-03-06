@@ -1,8 +1,13 @@
-const { prisma } = require("@/lib/prisma");
+// app/api/courts/route.js
+
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]/route"; // Zorg ervoor dat de juiste import is
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request) {
   console.log("API request received");
 
+  // Iedereen kan courts ophalen
   try {
     const courts = await prisma.court.findMany();
     console.log("Courts fetched from database:", courts);
@@ -20,6 +25,13 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  // Alleen admins mogen nieuwe courts aanmaken
+  const session = await getServerSession({ req: request, ...authOptions });
+
+  if (!session || session.user.roleId !== 1) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+  }
+
   const { name, city } = await request.json();
 
   try {
@@ -41,6 +53,13 @@ export async function POST(request) {
 }
 
 export async function PUT(request) {
+  // Alleen admins mogen courts updaten
+  const session = await getServerSession({ req: request, ...authOptions });
+
+  if (!session || session.user.roleId !== 1) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+  }
+
   const { id, name, city } = await request.json();
 
   try {
@@ -63,6 +82,13 @@ export async function PUT(request) {
 }
 
 export async function DELETE(request) {
+  // Alleen admins mogen courts verwijderen
+  const session = await getServerSession({ req: request, ...authOptions });
+
+  if (!session || session.user.roleId !== 1) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+  }
+
   const { id } = await request.json();
 
   try {

@@ -1,11 +1,10 @@
+// app/page.js
+
+"use client";
 import Image from "next/image";
-import styles from "./page.module.css";
-import { cache } from "react"; // ✅ Helps with caching data in Server Components
+import styles from "./page.module.css"; // Zorg ervoor dat dit bestand bestaat
 
-// ✅ Fix: Use correct fetching logic for Server Components
-
-export default async function Home() {
-
+export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -17,8 +16,11 @@ export default async function Home() {
           height={38}
           priority
         />
-
-        <h1>Clubs</h1>
+        <h1>Welkom bij de Club</h1>
+        <p>
+          Dit is de informatiepagina van de website. Je kunt hier alles vinden wat je
+          nodig hebt. De pagina is toegankelijk zonder inloggen.
+        </p>
       </main>
     </div>
   );
