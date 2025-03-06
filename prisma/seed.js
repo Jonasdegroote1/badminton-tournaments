@@ -7,9 +7,10 @@ async function main() {
   // Import your separate seed files
   // await require('./seed/clubSeed')(prisma);
   // await require('./seed/playerSeed')(prisma);
-  await require('./seed/teamSeed')(prisma);
+  // await require('./seed/teamSeed')(prisma);
   // await require('./seed/strengthSeed')(prisma);
   // await require('./seed/pouleSeed')(prisma);
+  await require('./seed/courtSeed')(prisma);
 
   console.log('Seeding complete!');
 }
