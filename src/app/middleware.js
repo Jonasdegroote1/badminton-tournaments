@@ -1,31 +1,28 @@
-// app/middleware.js
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";  // Correcte import
 import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 export async function middleware(req) {
-  const session = await getServerSession({ req, ...authOptions });
+  // Haal het token op (JWT) uit de cookies
+  const token = await getToken({ req });
 
-  // Als er geen sessie is (dus niet ingelogd), stuur de gebruiker naar de loginpagina
-  if (!session) {
+  // Als er geen token is, stuur de gebruiker naar de loginpagina
+  if (!token) {
     return NextResponse.redirect(new URL("/auth/login", req.url));
   }
 
-  // Controleer of de gebruiker de juiste rol heeft voor POST, PUT, DELETE
+  // Alleen gebruikers met roleId === 1 mogen POST, PUT, DELETE doen
   if (["POST", "PUT", "DELETE"].includes(req.method)) {
-    // Hier gaan we ervan uit dat rol '1' admin is
-    if (session.user.roleId !== 1) {
+    if (token.roleId !== 1) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
   }
 
-  // Laat de aanvraag doorgaan als de sessie aanwezig is en de gebruiker de juiste rol heeft
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    "/dashboard/*",  // Beveilig dashboardpagina's
-    "/api/*",         // Beveilig alle API-routes
+    "/dashboard/:path*",  // Beveilig alle dashboardpagina's
+    "/api/:path*",        // Beveilig alle API-routes
   ],
 };

@@ -31,6 +31,13 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+
+  const session = await getServerSession({ req: request, ...authOptions });
+  
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
+
   console.log("API request received");
 
 const { name, strengthId } = await request.json();
@@ -56,6 +63,13 @@ const { name, strengthId } = await request.json();
 }
 
 export async function PUT(request) {
+  
+  const session = await getServerSession({ req: request, ...authOptions });
+  
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
+
   console.log("API request received");
 
   const { id, name, strengthId } = await request.json();
@@ -84,6 +98,12 @@ export async function PUT(request) {
 
 export async function DELETE(request) {
   console.log("API request received");
+
+  const session = await getServerSession({ req: request, ...authOptions });
+  
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
 
   const { id } = await request.json();
 

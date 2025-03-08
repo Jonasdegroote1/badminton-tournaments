@@ -1,7 +1,7 @@
 // app/api/courts/route.js
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route"; // Zorg ervoor dat de juiste import is
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request) {
@@ -60,12 +60,12 @@ export async function PUT(request) {
     return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
   }
 
-  const { id, name, city } = await request.json();
-
+  
   try {
+    const { id, name} = await request.json();
     const court = await prisma.court.update({
       where: { id },
-      data: { name, city },
+      data: { name },
     });
     console.log("Court updated in database:", court);
 

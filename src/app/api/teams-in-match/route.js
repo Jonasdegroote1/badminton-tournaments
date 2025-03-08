@@ -17,6 +17,13 @@ export async function GET(request) {
 
 
 export async function POST(req, res) {
+  
+  const session = await getServerSession({ req: request, ...authOptions });
+  
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
+
   try {
     const { teamId, matchId } = req.body;
     const teamInMatch = await prisma.teamsInMatch.create({
@@ -33,6 +40,13 @@ export async function POST(req, res) {
 }
 
 export async function PUT(req, res) {
+  
+  const session = await getServerSession({ req: request, ...authOptions });
+  
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
+
   try {
     const { id } = req.params;
     const { teamId, matchId } = req.body;
@@ -53,6 +67,13 @@ export async function PUT(req, res) {
 }
 
 export async function DELETE(req, res) {
+  
+  const session = await getServerSession({ req: request, ...authOptions });
+  
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
+
   try {
     const { id } = req.params;
     await prisma.teamsInMatch.delete({

@@ -20,6 +20,13 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+
+  const session = await getServerSession({ req: request, ...authOptions });
+  
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
+
   try {
     const { courtId, poolId, team1Id, team2Id, status } = await request.json();
 
@@ -55,6 +62,13 @@ export async function POST(request) {
 }
 
 export async function PUT(request) {
+
+  const session = await getServerSession({ req: request, ...authOptions });
+  
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
+
   try {
     const { id, status } = await request.json();
 
@@ -80,6 +94,13 @@ export async function PUT(request) {
 }
 
 export async function DELETE(request) {
+
+  const session = await getServerSession({ req: request, ...authOptions });
+  
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
+    
   try {
     const { id } = await request.json();
 
