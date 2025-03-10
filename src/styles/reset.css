@@ -1,0 +1,76 @@
+/* Verwijder standaard marge, padding en andere opmaak voor alle elementen */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Zorgt ervoor dat padding en border de grootte van een element niet beïnvloeden */
+}
+
+/* Verwijder standaard list-stijl en opmaak voor ul, ol en li */
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Verwijder de standaard linkkleur en onderlijnen */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Standaard instellen van de font voor alle tekst */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+  background-color: #fff;
+  color: #333;
+}
+
+/* Standaard instellen van de font voor kopteksten (h1 - h6) */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+}
+
+/* Verwijder de standaard knopstijl */
+button,
+input,
+select,
+textarea {
+  background: none;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Zorg ervoor dat afbeeldingen responsief zijn */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Zorg ervoor dat tables goed worden weergegeven */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Optioneel: Voeg een basis stijl voor de scrollbalken toe */
+html {
+  scroll-behavior: smooth;
+}

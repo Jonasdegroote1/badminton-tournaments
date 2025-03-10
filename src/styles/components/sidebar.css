@@ -1,0 +1,39 @@
+.sidebar {
+  width: 20rem;
+  background-color: #f8f9fa;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.sidebar-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-link {
+  text-decoration: none;
+  padding: 10px;
+  color: #333;
+  display: block;
+}
+
+.sidebar-link:hover {
+  background-color: #ddd;
+}
+
+.add-tournament-btn {
+  margin-top: auto;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
