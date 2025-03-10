@@ -7,12 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Session {
+  VM  // Voormiddag
+  NM  // Namiddag
+}
+
 model Tournament {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String  
-  date      DateTime
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  date      String   @db.VarChar(10)  // Opslaan als "YYYY-MM-DD"
+  session   Session  // VM of NM
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   poules     Poule[]
   matches    Match[]
