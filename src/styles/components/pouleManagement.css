@@ -1,0 +1,11 @@
+.poule-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.poule-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

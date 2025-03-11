@@ -8,7 +8,6 @@ export async function GET(request) {
   // Iedereen kan tournaments ophalen
   try {
     const tournaments = await prisma.tournament.findMany();
-    console.log("Tournaments fetched from database:", tournaments);
 
     return new Response(JSON.stringify(tournaments), {
       status: 200,

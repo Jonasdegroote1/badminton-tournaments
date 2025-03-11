@@ -1,8 +1,7 @@
-const { prisma } = require("@/lib/prisma");
+// app/api/poules/route.js
+import { prisma } from "@/lib/prisma";
 
-export async function GET(request) {
-  console.log("API request received");
-
+export async function GET(req) {
   try {
     const poules = await prisma.poule.findMany({
       include: {
@@ -11,13 +10,11 @@ export async function GET(request) {
             player1: true,
             player2: true,
             strength: true,
-            poule: true
-          }
-        }
-      }
+            poule: true,
+          },
+        },
+      },
     });
-    console.log("Poules fetched from database:", poules);
-
     return new Response(JSON.stringify(poules), {
       status: 200,
       headers: { "Content-Type": "application/json" },
@@ -30,89 +27,14 @@ export async function GET(request) {
   }
 }
 
-export async function POST(request) {
-
-  const session = await getServerSession({ req: request, ...authOptions });
-  
-    if (!session || session.user.roleId !== 1) {
-      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
-    }
-
-  console.log("API request received");
-
-const { name, strengthId } = await request.json();
-  try {
-    const poule = await prisma.poule.create({
-      data: {
-        name,
-        strengthId
-      }
-    });
-    console.log("Poule created in database:", poule);
-
-    return new Response(JSON.stringify(poule), {
-      status: 201,
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    console.error("Error creating poule:", error);
-    return new Response(JSON.stringify({ error: "Error creating poule" }), {
-      status: 500,
-    });
-  }
-}
-
-export async function PUT(request) {
-  
-  const session = await getServerSession({ req: request, ...authOptions });
-  
-    if (!session || session.user.roleId !== 1) {
-      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
-    }
-
-  console.log("API request received");
-
-  const { id, name, strengthId } = await request.json();
-
-  try {
-    const poule = await prisma.poule.update({
-      where: { id },
-      data: { 
-        name,
-        strengthId
-      }
-    });
-    console.log("Poule updated in database:", poule);
-
-    return new Response(JSON.stringify(poule), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    console.error("Error updating poule:", error);
-    return new Response(JSON.stringify({ error: "Error updating poule" }), {
-      status: 500,
-    });
-  }
-}
-
-export async function DELETE(request) {
-  console.log("API request received");
-
-  const session = await getServerSession({ req: request, ...authOptions });
-  
-    if (!session || session.user.roleId !== 1) {
-      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
-    }
-
-  const { id } = await request.json();
+// app/api/poules/route.js
+export async function DELETE(req) {
+  const { id } = await req.json(); // Gebruik await om de JSON-data van de body te verkrijgen
 
   try {
     const poule = await prisma.poule.delete({
-      where: { id }
+      where: { id },
     });
-    console.log("Poule deleted from database:", poule);
-
     return new Response(JSON.stringify(poule), {
       status: 200,
       headers: { "Content-Type": "application/json" },

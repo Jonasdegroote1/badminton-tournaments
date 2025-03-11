@@ -1,0 +1,90 @@
+/* Algemene styling voor de poule-item (de kaart) */
+.poule-item {
+  width: 30%;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+  padding: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.poule-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.poule-item span {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* Styling voor de knoppen */
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.edit-btn {
+  background-color: #ffc107;  /* Geel voor bewerken */
+}
+
+.edit-btn:hover {
+  background-color: #e0a800;
+}
+
+.delete-btn {
+  background-color: #dc3545;  /* Rood voor verwijderen */
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* Styling voor de teamslijst */
+.team-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+/* Styling voor elk team-item */
+.team-item {
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ddd;
+}
+
+.team-item span {
+  font-size: 16px;
+  color: #555;
+  font-weight: normal;
+}
+
+.team-item:hover {
+  background-color: #f1f1f1;
+  border-color: #ccc;
+}
+
+/* Voeg ruimte toe aan de lijst van teams in de PouleCard */
+.poule-item .team-list {
+  margin-top: 10px;
+}
