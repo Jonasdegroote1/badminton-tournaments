@@ -13,12 +13,11 @@ export default function Sidebar() {
       <TournamentSelector />
 
       <nav className="sidebar-nav">
-        <NavItem icon="🏠" label="Dashboard" active />
-        <NavItem icon="⚽" label="Poules" />
-        <NavItem icon="👥" label="Teams" />
-        <NavItem icon="🏆" label="Matches" />
-        <NavItem icon="📅" label="Schedule" />
-        <NavItem icon="⚙️" label="Settings" />
+        <NavItem icon="🏠" label="Dashboard" active href="/dashboard" />
+        <NavItem icon="⚽" label="Poules" href="/dashboard/poules" />
+        <NavItem icon="👥" label="Teams" href="/dashboard/teams" />
+        <NavItem icon="🏆" label="Matches" href="/dashboard/matches" />
+        <NavItem icon="📅" label="Schedule" href="/dashboard/schedule" />
       </nav>
 
       <OtherTournaments 
