@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import "../styles/components/tournamentSelector.css";
+import "../../styles/components/tournamentSelector.css";
 
 export default function TournamentSelector() {
   const [tournaments, setTournaments] = useState([]);

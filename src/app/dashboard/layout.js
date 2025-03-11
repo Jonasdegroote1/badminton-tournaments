@@ -1,4 +1,4 @@
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/sidebar/Sidebar";
 import "../../styles/reset.css";
 import "../../styles/layouts/dashboard.css";
 import "../../styles/components/btn.css";

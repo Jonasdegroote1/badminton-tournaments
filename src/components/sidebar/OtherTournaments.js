@@ -1,6 +1,6 @@
 "use client";
 
-import "../styles/components/otherTournaments.css";
+import "../../styles/components/otherTournaments.css";
 
 import { useState } from "react";
 

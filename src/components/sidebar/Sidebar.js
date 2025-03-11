@@ -1,5 +1,5 @@
 "use client";
-import "../styles/components/sidebar.css";
+import "../../styles/components/sidebar.css";
 import NavItem from "./NavItem";
 import OtherTournaments from "./OtherTournaments";
 import TournamentSelector from "./TournamentSelector";

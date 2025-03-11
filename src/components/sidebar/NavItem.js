@@ -1,5 +1,5 @@
 import Link from "next/link";
-import "../styles/components/navItem.css";
+import "../../styles/components/navItem.css";
 
 export default function NavItem({ icon, label, href = "/" , active }) {
   return (
