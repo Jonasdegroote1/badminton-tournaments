@@ -55,3 +55,39 @@ export async function DELETE(req) {
     });
   }
 }
+
+export async function POST(req) {
+  try {
+    const { name, tournamentId, strengthId } = await req.json(); // Verkrijg de JSON-gegevens van de body
+
+    // Controleer of alle velden aanwezig zijn
+    if (!name || !tournamentId || !strengthId) {
+      return new Response(
+        JSON.stringify({ error: "Name, tournamentId and strengthId are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Maak een nieuwe poule aan
+    const poule = await prisma.poule.create({
+      data: {
+        name,
+        tournamentId,
+        strengthId,
+      },
+    });
+
+    // Retourneer de nieuwe poule met status 201
+    return new Response(JSON.stringify(poule), {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error creating poule:", error);
+    return new Response(
+      JSON.stringify({ error: "Error creating poule", details: error.message }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}
+
