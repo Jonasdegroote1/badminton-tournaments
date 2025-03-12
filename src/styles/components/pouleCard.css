@@ -30,8 +30,11 @@ button {
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
-  margin-left: 10px;
   font-size: 14px;
+}
+
+.poule-item button {
+  margin-right: .5rem;
 }
 
 button:hover {
