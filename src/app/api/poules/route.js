@@ -1,9 +1,18 @@
 // app/api/poules/route.js
 import { prisma } from "@/lib/prisma";
 
+
 export async function GET(req) {
   try {
+    const url = new URL(req.url);
+    const tournamentId = url.searchParams.get("tournamentId");
+
+    if (!tournamentId) {
+      return new Response(JSON.stringify({ error: "Geen tournamentId opgegeven" }), { status: 400 });
+    }
+
     const poules = await prisma.poule.findMany({
+      where: { tournamentId: parseInt(tournamentId) }, // Filter op het geselecteerde toernooi
       include: {
         teams: {
           include: {
@@ -15,17 +24,17 @@ export async function GET(req) {
         },
       },
     });
+
     return new Response(JSON.stringify(poules), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("Error fetching poules:", error);
-    return new Response(JSON.stringify({ error: "Error fetching poules" }), {
-      status: 500,
-    });
+    return new Response(JSON.stringify({ error: "Error fetching poules" }), { status: 500 });
   }
 }
+
 
 // app/api/poules/route.js
 export async function DELETE(req) {
