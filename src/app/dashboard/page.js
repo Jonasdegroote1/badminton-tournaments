@@ -1,30 +1,28 @@
-"use client"; // Zorg ervoor dat deze pagina een Client Component is
+"use client";
 
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import CourtUpdateForm from "@/components/CourtUpdateForm";
-import useTournamentStore from "../../lib/tournamentStore"; // Zustand-store importeren
+import useTournamentStore from "../../lib/tournamentStore"; // Zustand-store
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { selectedTournament } = useTournamentStore(); // Haal geselecteerd toernooi op
 
-  // Wacht op session-status en redirect als er geen sessie is
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.replace("/auth/login"); // Gebruik replace() om de geschiedenis niet op te slaan
+      router.replace("/auth/login");
     }
   }, [status, router]);
 
-  // Voorkom renderen als de sessie nog laadt
   if (status === "loading") {
     return <p>Bezig met laden...</p>;
   }
 
   if (!session) {
-    return null; // Zorgt ervoor dat de pagina niet kort flikkert
+    return null;
   }
 
   return (
@@ -33,7 +31,6 @@ export default function Dashboard() {
       <p>Welkom, <strong>{session.user.firstName}</strong>! 🎉</p>
       <p>Rol: <span>{session.user.roleId === 1 ? "Admin" : "Gebruiker"}</span></p>
 
-      {/* Geselecteerd toernooi tonen */}
       {selectedTournament ? (
         <div>
           <h2>Geselecteerd Toernooi</h2>
@@ -42,7 +39,7 @@ export default function Dashboard() {
           <p><strong>Session:</strong> {selectedTournament.session || "No session data"}</p>
         </div>
       ) : (
-        <p>Selecteer een toernooi om de details te zien.</p>
+        <p>Geen toernooi geselecteerd...</p>
       )}
 
       <div>
