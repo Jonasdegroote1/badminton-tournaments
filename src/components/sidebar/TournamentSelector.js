@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import useTournamentStore from "../lib/tournamentStore"; // Zustand-store
-import "../styles/components/tournamentSelector.css";
+import useTournamentStore from "@/lib/tournamentStore"; // Zustand-store
+import "../../styles/components/tournamentSelector.css";
 
 export default function TournamentSelector() {
   const [tournaments, setTournaments] = useState([]);
