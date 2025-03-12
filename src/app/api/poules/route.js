@@ -14,6 +14,7 @@ export async function GET(req) {
     const poules = await prisma.poule.findMany({
       where: { tournamentId: parseInt(tournamentId) }, // Filter op het geselecteerde toernooi
       include: {
+        strength: true,
         teams: {
           include: {
             player1: true,

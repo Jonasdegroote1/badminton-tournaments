@@ -91,3 +91,20 @@ button:hover {
 .poule-item .team-list {
   margin-top: 10px;
 }
+
+/* Styling voor de naam van de poule */
+.poule-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 4px; /* Kleine marge tussen naam en strength */
+}
+
+/* Styling voor de sterkte van de poule */
+.poule-strength {
+  font-size: 14px;
+  font-weight: normal;
+  color: #666;
+  display: block;
+}
