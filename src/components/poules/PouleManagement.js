@@ -1,12 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import useTournamentStore from "@/lib/tournamentStore"; // Zustand store importeren
 import PouleCard from "./PouleCard";
 import "../../styles/components/pouleManagement.css";
+import useTournamentStore from "@/lib/tournamentStore";
 
-export default function PouleManagement() {
+export default function PouleManagement({ poules, setPoules }) {
   const { selectedTournament } = useTournamentStore();
-  const [poules, setPoules] = useState([]);
 
   useEffect(() => {
     if (!selectedTournament) return;
@@ -15,10 +14,10 @@ export default function PouleManagement() {
       .then((res) => res.json())
       .then((data) => {
         console.log("Opgehaalde poules:", data);
-        setPoules(data);
+        setPoules(data); // Stel de poules in de oudercomponent in
       })
       .catch((error) => console.error("Fout bij ophalen poules:", error));
-  }, [selectedTournament]); // useEffect wordt opnieuw uitgevoerd als selectedTournament verandert
+  }, [selectedTournament, setPoules]); // useEffect wordt opnieuw uitgevoerd als selectedTournament verandert of setPoules wijzigt
 
   const handleDelete = (id) => {
     if (window.confirm("Weet je zeker dat je deze poule wilt verwijderen?")) {

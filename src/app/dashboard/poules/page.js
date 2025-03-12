@@ -5,31 +5,42 @@ import PouleManagement from "@/components/poules/PouleManagement";
 import useTournamentStore from "@/lib/tournamentStore";
 
 export default function Poules() {
-  const { selectedTournament } = useTournamentStore(); // Gebruik Zustand store voor geselecteerd toernooi
+  const { selectedTournament } = useTournamentStore();
   const [showModal, setShowModal] = useState(false);
+  const [poules, setPoules] = useState([]);
 
-  const handleAddPoule = () => {
-    // Haal de nieuwe gegevens op of werk de pagina bij na het toevoegen van een poule
+  const handleAddPoule = (newPoule) => {
+    // Voeg de nieuwe poule toe aan de lijst
+    setPoules((prevPoules) => [...prevPoules, newPoule]);
   };
+
+  // Zorg ervoor dat selectedTournament bestaat voordat je ermee werkt
+  useEffect(() => {
+    if (!selectedTournament) return;
+
+    // Haal de poules op bij het laden van de component
+    fetch(`/api/poules?tournamentId=${selectedTournament.id}`)
+      .then((res) => res.json())
+      .then((data) => setPoules(data))
+      .catch((error) => console.error("Fout bij ophalen poules:", error));
+  }, [selectedTournament]); // Deze useEffect wordt uitgevoerd wanneer selectedTournament verandert
+
+  if (!selectedTournament) {
+    return <p>Gelieve een toernooi te selecteren.</p>;
+  }
 
   return (
     <div>
       <h1>Poules</h1>
-      {selectedTournament ? (
-        <>
-          <button onClick={() => setShowModal(true)}>+ Voeg Poule toe</button>
+      <button onClick={() => setShowModal(true)}>+ Voeg Poule toe</button>
 
-          <AddPouleModal
-            showModal={showModal}
-            setShowModal={setShowModal}
-            tournamentId={selectedTournament.id} // Gebruik het juiste toernooi-ID
-            onAddPoule={handleAddPoule}
-          />
-          <PouleManagement />
-        </>
-      ) : (
-        <p>Gelieve een toernooi te selecteren.</p>
-      )}
+      <AddPouleModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        tournamentId={selectedTournament.id}
+        onAddPoule={handleAddPoule} // Call-back om de nieuwe poule toe te voegen
+      />
+      <PouleManagement poules={poules} setPoules={setPoules} />
     </div>
   );
 }

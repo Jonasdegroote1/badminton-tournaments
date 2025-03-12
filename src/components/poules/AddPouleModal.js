@@ -53,8 +53,9 @@ export default function AddPouleModal({ showModal, setShowModal, tournamentId, o
       });
 
       if (response.ok) {
-        onAddPoule();
-        setShowModal(false);
+        const newPoule = await response.json(); // Haal de nieuwe poule op uit de response
+        onAddPoule(newPoule); // Voeg de nieuwe poule toe aan de lijst in de oudercomponent
+        setShowModal(false); // Sluit de modal na succes
       } else {
         const errorData = await response.json();
         console.error("Error:", errorData);
