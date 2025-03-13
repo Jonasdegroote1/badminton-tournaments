@@ -4,9 +4,7 @@ import TeamItem from "./TeamItem";
 
 export default function PouleCard({ data, onDelete, onEdit, onRemoveTeam }) {
   const handleDelete = () => {
-    if (window.confirm(`Weet je zeker dat je ${data.name} wilt verwijderen?`)) {
-      onDelete(data.id);
-    }
+       onDelete(data.id);  // Verwijder de poule via de onDelete-functie
   };
 
   return (
