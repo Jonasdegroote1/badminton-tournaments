@@ -1,17 +1,28 @@
 const { prisma } = require("@/lib/prisma");
 
+// /pages/api/teams.js
 export async function GET(request) {
   console.log("API request received");
 
+  const { searchParams } = new URL(request.url);
+  const strengthId = searchParams.get('strengthId');
+  const tournamentId = searchParams.get('tournamentId');
+
   try {
     const teams = await prisma.team.findMany({
+      where: {
+        strengthId: parseInt(strengthId),
+        tournamentId: parseInt(tournamentId),
+        pouleId: null,  // Alleen teams zonder poule
+      },
       include: {
         player1: true,
         player2: true,
         strength: true,
-        pool: true
-      }}
-    );
+        poule: true
+      }
+    });
+
     console.log("Teams fetched from database:", teams);
 
     return new Response(JSON.stringify(teams), {
@@ -25,6 +36,7 @@ export async function GET(request) {
     });
   }
 }
+
 
 export async function POST(request) {
   

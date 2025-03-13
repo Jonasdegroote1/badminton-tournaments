@@ -1,10 +1,28 @@
+// components/PouleCard.js
 "use client";
-import "../../styles/components/pouleCard.css";
-import TeamItem from "./TeamItem";
 
-export default function PouleCard({ data, onDelete, onEdit, onRemoveTeam }) {
+import { useState } from "react";
+import TeamItem from "./TeamItem";
+import TeamSelectionModal from "./TeamSelectionModal"; // Importeer de modal
+import "../../styles/components/pouleCard.css";
+
+export default function PouleCard({ data, onDelete, onEdit, onRemoveTeam, handleAddTeam }) {
+  const [isModalOpen, setIsModalOpen] = useState(false); // Staat voor het openen/sluiten van de modal
+
   const handleDelete = () => {
-       onDelete(data.id);  // Verwijder de poule via de onDelete-functie
+    onDelete(data.id);  // Verwijder de poule via de onDelete-functie
+  };
+
+  const handleAddTeamClick = () => {
+    setIsModalOpen(true); // Open de modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Sluit de modal
+  };
+
+  const handleTeamAdd = (teamId) => {
+    handleAddTeam(data.id, data.strengthId); // Voeg het team toe aan de poule
   };
 
   return (
@@ -20,6 +38,15 @@ export default function PouleCard({ data, onDelete, onEdit, onRemoveTeam }) {
         </div>
       </div>
       <TeamItem data={data.teams || []} onRemove={(teamId) => onRemoveTeam(teamId, data.id)} />
+      <button className="add-team-btn" onClick={handleAddTeamClick}>Voeg team toe</button>
+
+      <TeamSelectionModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        strengthId={data.strengthId}
+        tournamentId={data.tournamentId}
+        onAddTeam={handleTeamAdd}
+      />
     </li>
   );
 }

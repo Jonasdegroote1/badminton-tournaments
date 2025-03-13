@@ -6,6 +6,7 @@ export default function TeamItem({ data, onRemove }) {
   return (
     <ul className="team-list">
       {data.map((team) => (
+        console.log(team),
         <li key={team.id} className="team-item">
           <span>
             {team.player1.firstName} {team.player1.lastName} & {team.player2.firstName} {team.player2.lastName}
