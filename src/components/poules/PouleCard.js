@@ -6,9 +6,7 @@ import "../../styles/components/pouleCard.css";
 
 export default function PouleCard({ data, onDelete, onEdit }) {
   const handleDelete = () => {
-    if (window.confirm(`Weet je zeker dat je ${data.name} wilt verwijderen?`)) {
-      onDelete(data.id);  // Verwijder de poule via de onDelete-functie
-    }
+       onDelete(data.id);  // Verwijder de poule via de onDelete-functie
   };
 
   const handleEdit = () => {
