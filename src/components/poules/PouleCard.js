@@ -1,18 +1,12 @@
-"use client";  // Zorg ervoor dat deze file als clientcomponent wordt behandeld
-
-import { useState } from "react";
-import TeamItem from "./TeamItem"; // Importeer TeamItem van zijn bestand
+"use client";
 import "../../styles/components/pouleCard.css";
+import TeamItem from "./TeamItem";
 
-export default function PouleCard({ data, onDelete, onEdit }) {
+export default function PouleCard({ data, onDelete, onEdit, onRemoveTeam }) {
   const handleDelete = () => {
     if (window.confirm(`Weet je zeker dat je ${data.name} wilt verwijderen?`)) {
-      onDelete(data.id);  // Verwijder de poule via de onDelete-functie
+      onDelete(data.id);
     }
-  };
-
-  const handleEdit = () => {
-    onEdit(data.id);  // Bewerk de poule via de onEdit-functie
   };
 
   return (
@@ -23,11 +17,11 @@ export default function PouleCard({ data, onDelete, onEdit }) {
           <span className="poule-strength">{data.strength?.name || "Onbekend"}</span>
         </div>
         <div className="poule-item-actions">
-          <button className="edit-btn" onClick={handleEdit}>Bewerken</button>
+          <button className="edit-btn" onClick={() => onEdit(data.id)}>Bewerken</button>
           <button className="delete-btn" onClick={handleDelete}>Verwijderen</button>
         </div>
       </div>
-      <TeamItem data={data.teams || []} />  {/* Zorg ervoor dat teams een lege array heeft als data nog niet beschikbaar is */}
+      <TeamItem data={data.teams || []} onRemove={(teamId) => onRemoveTeam(teamId, data.id)} />
     </li>
   );
 }
