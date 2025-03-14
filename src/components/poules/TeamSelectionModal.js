@@ -38,6 +38,11 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
   const handleTeamSelect = (event) => {
     const selectedId = event.target.value;
     const team = teams.find((team) => team.id === selectedId);
+
+    // Logging om te zien wat er gebeurt bij selectie
+    console.log('Selected Team ID:', selectedId);
+    console.log('Selected Team:', team);
+
     setSelectedTeam(team); // Stel het geselecteerde team in
   };
 
