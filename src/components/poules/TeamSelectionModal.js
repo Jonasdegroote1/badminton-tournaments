@@ -37,10 +37,11 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
 
     console.log("Bevestigen team toevoeging:", selectedTeamId); // Log de bevestiging
 
+    // API-aanroep om team toe te voegen aan de poule
     fetch(`/api/add-team-to-poule`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ teamId: selectedTeamId, strengthId }),
+      body: JSON.stringify({ teamId: selectedTeamId, strengthId: strengthId }), // Zorg ervoor dat beide waarden worden doorgestuurd
     })
       .then((res) => res.json())
       .then((data) => {
