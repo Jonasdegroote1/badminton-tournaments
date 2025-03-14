@@ -26,6 +26,7 @@ export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthI
   const handleTeamSelect = (event) => {
     const selectedId = parseInt(event.target.value, 10);
     console.log('Selected Team ID:', selectedId);
+    console.log('poufffle:', pouleId);
 
     const team = teams.find((team) => team.id === selectedId);
     console.log('Selected Team:', team);
@@ -36,13 +37,22 @@ export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthI
   const handleAdd = () => {
     console.log("handleAdd aangeroepen");
 
+    if (!selectedTeam) {
+      console.log("❌ Geen team geselecteerd.");
+    } else {
+      console.log("✅ Geselecteerd team ID:", selectedTeam.id);
+    }
+
+    if (!pouleId) {
+      console.log("❌ Geen poule geselecteerd.", pouleId);
+    } else {
+      console.log("✅ Geselecteerde poule ID:", pouleId);
+    }
+
     if (selectedTeam && pouleId) {
-      console.log("Team toegevoegd:", selectedTeam.id);
-      console.log("pouleId:", pouleId);
+      console.log("🚀 Team wordt toegevoegd...",);
       onAddTeam(selectedTeam.id, pouleId); // Voeg team toe aan de poule
       onClose(); // Sluit de modal
-    } else {
-      console.log("Geen team of poule geselecteerd.");
     }
   };
 
