@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import "../../styles/components/teamSelectionModal.css"; // Zorg ervoor dat je de juiste stijl hebt voor je modal
 
-export default function TeamSelectionModal({ isOpen, onClose, strengthId, tournamentId, onAddTeam }) {
+export default function TeamSelectionModal({ isOpen, onClose, strengthId, tournamentId, pouleId, onAddTeam }) {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true); // We voegen een loading state toe
   const [selectedTeam, setSelectedTeam] = useState(null);
@@ -38,8 +38,10 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
 
   const handleAdd = () => {
     if (selectedTeam) {
+      // Log het geselecteerde team en de pouleId voor controle
       console.log("Team toegevoegd:", selectedTeam.id);
-      onAddTeam(selectedTeam.id); // Voeg team toe aan de poule
+      console.log("Poule ID:", pouleId); // Voeg de pouleId toe aan de log
+      onAddTeam(selectedTeam.id, pouleId); // Voeg team toe aan de poule
       onClose(); // Sluit de modal
     }
   };
