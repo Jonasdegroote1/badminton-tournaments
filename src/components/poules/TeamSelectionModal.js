@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
-import "../../styles/components/teamSelectionModal.css";
 
 export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthId, tournamentId, onAddTeam }) {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTeam, setSelectedTeam] = useState(null);
+
+  // Reset selectedTeam wanneer de modal wordt geopend
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedTeam(null); // Reset geselecteerd team
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return; // Zorg ervoor dat de modal pas data ophaalt als deze zichtbaar is
@@ -50,7 +56,7 @@ export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthI
     }
 
     if (selectedTeam && pouleId) {
-      console.log("🚀 Team wordt toegevoegd...",);
+      console.log("🚀 Team wordt toegevoegd...");
       onAddTeam(selectedTeam.id, pouleId); // Voeg team toe aan de poule
       onClose(); // Sluit de modal
     }
