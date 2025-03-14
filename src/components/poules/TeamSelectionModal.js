@@ -38,7 +38,7 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
   const handleTeamSelect = (event) => {
     const selectedId = event.target.value;
     const team = teams.find((team) => team.id === selectedId);
-    setSelectedTeam(team);
+    setSelectedTeam(team); // Stel het geselecteerde team in
   };
 
   const handleAdd = () => {
@@ -58,7 +58,11 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
           ) : (
             <form>
               <label htmlFor="teamSelect">Kies een team:</label>
-              <select id="teamSelect" onChange={handleTeamSelect} value={selectedTeam?.id || ""}>
+              <select
+                id="teamSelect"
+                onChange={handleTeamSelect}
+                value={selectedTeam ? selectedTeam.id : ""} // Zorg ervoor dat de waarde goed is ingesteld
+              >
                 <option value="" disabled>Kies een team</option>
                 {teams.length > 0 ? (
                   teams.map((team) => (
