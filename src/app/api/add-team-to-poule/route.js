@@ -1,19 +1,26 @@
-app.put('/api/add-team-to-poule', async (req, res) => {
-  const { teamId, strengthId, pouleId } = req.body;
+// src/app/api/add-team-to-poule/route.js
 
-  if (!teamId || !strengthId || !pouleId) {
-    return res.status(400).json({ error: 'Invalid teamId, strengthId or pouleId' });
-  }
+import { prisma } from "@/lib/prisma"; // Zorg ervoor dat je de prisma-client correct importeert
 
+export async function PUT(req) {
   try {
+    // Ontvang de teamId en pouleId uit de request body
+    const { teamId, pouleId } = await req.json();
+
+    // Voeg het team toe aan de poule door de juiste koppeling in de database te maken
     const updatedTeam = await prisma.team.update({
-      where: { id: teamId },
-      data: { strengthId, pouleId },
+      where: {
+        id: teamId, // Zoek het team met het opgegeven ID
+      },
+      data: {
+        pouleId: pouleId, // Koppel het team aan de poule
+      },
     });
 
-    return res.status(200).json(updatedTeam);
+    // Retourneer het bijgewerkte team als response
+    return new Response(JSON.stringify(updatedTeam), { status: 200 });
   } catch (error) {
     console.error("Error adding team to poule:", error);
-    return res.status(500).json({ error: 'Error adding team to poule' });
+    return new Response("Internal Server Error", { status: 500 });
   }
-});
+}
