@@ -26,10 +26,16 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
 
   const handleSelectTeam = (teamId) => {
     setSelectedTeamId(teamId); // Sla het geselecteerde team op
+    console.log("Geselecteerd team:", teamId); // Log het geselecteerde team
   };
 
   const handleConfirmSelection = () => {
-    if (!selectedTeamId) return;
+    if (!selectedTeamId) {
+      console.log("Geen team geselecteerd!"); // Log een foutmelding als er geen team is geselecteerd
+      return;
+    }
+
+    console.log("Bevestigen team toevoeging:", selectedTeamId); // Log de bevestiging
 
     fetch(`/api/add-team-to-poule`, {
       method: "PUT",
@@ -37,11 +43,14 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
       body: JSON.stringify({ teamId: selectedTeamId, strengthId }),
     })
       .then((res) => res.json())
-      .then(() => {
+      .then((data) => {
+        console.log("Team toegevoegd:", data); // Log succesdata
         onTeamAdded(); // Refresh de lijst met teams in de poule
         onClose(); // Sluit de modal
       })
-      .catch((error) => console.error("Fout bij toevoegen team aan poule:", error));
+      .catch((error) => {
+        console.error("Fout bij toevoegen team aan poule:", error); // Log de fout
+      });
   };
 
   return (
