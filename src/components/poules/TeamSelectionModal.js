@@ -1,76 +1,61 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import "../../styles/components/teamSelectionModal.css"; // Zorg ervoor dat je de juiste stijl hebt voor je modal
+import "../../styles/components/teamSelectionModal.css"; // Zorg voor de juiste CSS-stijl
 
-export default function TeamSelectionModal({ isOpen, onClose, strengthId, tournamentId, onAddTeam }) {
+export default function TeamSelectionModal({ isOpen, onClose, strengthId, tournamentId, onTeamAdded }) {
   const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(true); // We voegen een loading state toe
-  const [selectedTeam, setSelectedTeam] = useState(null);
-
-  // Zorg ervoor dat we roleId loggen bij het openen van de modal en in de client-side omgeving
-  useEffect(() => {
-    // Alleen in de browseromgeving (client-side) loggen
-    if (typeof window !== "undefined") {
-      const token = JSON.parse(localStorage.getItem("token")); // of haal het token uit cookies, context, etc.
-      if (token) {
-        console.log('Role ID:', token?.roleId); // Log de roleId
-      }
-    }
-  }, []); // Dit wordt alleen uitgevoerd bij het laden van de component
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isOpen) return; // Zorg ervoor dat de modal pas data ophaalt als deze zichtbaar is
-    setLoading(true); // Start de loading state
+    if (!isOpen) return;
+    setLoading(true);
 
     fetch(`/api/team?strengthId=${strengthId}&tournamentId=${tournamentId}`)
       .then((res) => res.json())
       .then((data) => {
         setTeams(data);
-        setLoading(false); // Zet de loading state uit zodra de data is geladen
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching teams:", error);
-        setLoading(false); // Zet loading uit zelfs als er een fout is
+        setLoading(false);
       });
   }, [isOpen, strengthId, tournamentId]);
 
-  const handleTeamSelect = (team) => {
-    setSelectedTeam(team);
-  };
+  const handleSelectTeam = (teamId) => {
+    if (!teamId) return;
 
-  const handleAdd = () => {
-    if (selectedTeam) {
-      onAddTeam(selectedTeam.id); // Voeg team toe aan de poule
-      onClose(); // Sluit de modal
-    }
+    fetch(`/api/add-team-to-poule`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ teamId, strengthId }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        onTeamAdded(); // Refresh de lijst met teams in de poule
+        onClose(); // Sluit de modal
+      })
+      .catch((error) => console.error("Fout bij toevoegen team aan poule:", error));
   };
 
   return (
     isOpen && (
       <div className="modal-overlay">
         <div className="modal-content">
-          <h2>Selecteer een Team</h2>
+          <h2>Voeg een team toe</h2>
           {loading ? (
-            <p>Loading teams...</p> // Toon een loading bericht terwijl de data wordt opgehaald
+            <p>Teams laden...</p>
           ) : (
-            <ul className="team-list">
-              {teams.length > 0 ? (
-                teams.map((team) => (
-                  <li
-                    key={team.id}
-                    onClick={() => handleTeamSelect(team)}
-                    className={selectedTeam?.id === team.id ? "selected" : ""}
-                  >
-                    {team.player1.firstName} & {team.player2 ? team.player2.firstName : "Geen tweede speler"}
-                  </li>
-                ))
-              ) : (
-                <p>Geen teams beschikbaar</p> // Toon een bericht als er geen teams zijn
-              )}
-            </ul>
+            <select onChange={(e) => handleSelectTeam(e.target.value)}>
+              <option value="">Selecteer een team</option>
+              {teams.map((team) => (
+                <option key={team.id} value={team.id}>
+                  {team.player1.firstName} & {team.player2 ? team.player2.firstName : "Geen tweede speler"}
+                </option>
+              ))}
+            </select>
           )}
-          <button onClick={handleAdd} disabled={!selectedTeam}>Voeg team toe</button>
           <button onClick={onClose}>Annuleren</button>
         </div>
       </div>
