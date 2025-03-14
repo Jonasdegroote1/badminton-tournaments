@@ -1,5 +1,3 @@
-// src/app/api/add-team-to-poule/route.js
-
 import { prisma } from "@/lib/prisma"; // Zorg ervoor dat je de prisma-client correct importeert
 
 export async function PUT(req) {
@@ -10,7 +8,7 @@ export async function PUT(req) {
     // Voeg het team toe aan de poule door de juiste koppeling in de database te maken
     const updatedTeam = await prisma.team.update({
       where: {
-        id: teamId, // Zoek het team met het opgegeven ID
+        id: teamId, // Gebruik het teamId om het juiste team te vinden
       },
       data: {
         pouleId: pouleId, // Koppel het team aan de poule
