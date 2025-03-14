@@ -6,6 +6,7 @@ import "../../styles/components/teamSelectionModal.css"; // Zorg voor de juiste 
 export default function TeamSelectionModal({ isOpen, onClose, strengthId, tournamentId, onTeamAdded }) {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedTeamId, setSelectedTeamId] = useState(null); // Houdt het geselecteerde team bij
 
   useEffect(() => {
     if (!isOpen) return;
@@ -24,12 +25,16 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
   }, [isOpen, strengthId, tournamentId]);
 
   const handleSelectTeam = (teamId) => {
-    if (!teamId) return;
+    setSelectedTeamId(teamId); // Sla het geselecteerde team op
+  };
+
+  const handleConfirmSelection = () => {
+    if (!selectedTeamId) return;
 
     fetch(`/api/add-team-to-poule`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ teamId, strengthId }),
+      body: JSON.stringify({ teamId: selectedTeamId, strengthId }),
     })
       .then((res) => res.json())
       .then(() => {
@@ -47,14 +52,19 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
           {loading ? (
             <p>Teams laden...</p>
           ) : (
-            <select onChange={(e) => handleSelectTeam(e.target.value)}>
-              <option value="">Selecteer een team</option>
-              {teams.map((team) => (
-                <option key={team.id} value={team.id}>
-                  {team.player1.firstName} & {team.player2 ? team.player2.firstName : "Geen tweede speler"}
-                </option>
-              ))}
-            </select>
+            <>
+              <select onChange={(e) => handleSelectTeam(e.target.value)} value={selectedTeamId || ""}>
+                <option value="">Selecteer een team</option>
+                {teams.map((team) => (
+                  <option key={team.id} value={team.id}>
+                    {team.player1.firstName} & {team.player2 ? team.player2.firstName : "Geen tweede speler"}
+                  </option>
+                ))}
+              </select>
+              {selectedTeamId && (
+                <button onClick={handleConfirmSelection}>Bevestig toevoeging</button>
+              )}
+            </>
           )}
           <button onClick={onClose}>Annuleren</button>
         </div>
