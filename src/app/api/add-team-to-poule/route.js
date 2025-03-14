@@ -1,26 +1,19 @@
-import { prisma } from "@/lib/prisma";
+app.put('/api/add-team-to-poule', async (req, res) => {
+  const { teamId, strengthId, pouleId } = req.body;
 
-export async function PUT(req) {
+  if (!teamId || !strengthId || !pouleId) {
+    return res.status(400).json({ error: 'Invalid teamId, strengthId or pouleId' });
+  }
+
   try {
-    // Ontvang en parse de JSON-body
-    const body = await req.json();
-    const teamId = parseInt(body.teamId, 10);
-    const pouleId = parseInt(body.pouleId, 10);
-
-    // Controleer of de parsing gelukt is
-    if (isNaN(teamId) || isNaN(pouleId)) {
-      return new Response(JSON.stringify({ error: "Invalid teamId or pouleId" }), { status: 400 });
-    }
-
-    // Update het team in de database
     const updatedTeam = await prisma.team.update({
       where: { id: teamId },
-      data: { pouleId: pouleId },
+      data: { strengthId, pouleId },
     });
 
-    return new Response(JSON.stringify(updatedTeam), { status: 200 });
+    return res.status(200).json(updatedTeam);
   } catch (error) {
     console.error("Error adding team to poule:", error);
-    return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
+    return res.status(500).json({ error: 'Error adding team to poule' });
   }
-}
+});
