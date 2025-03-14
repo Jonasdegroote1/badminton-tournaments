@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import "../../styles/components/teamSelectionModal.css"; // Zorg ervoor dat je de juiste stijl hebt voor je modal
 
-export default function TeamSelectionModal({ isOpen, onClose, strengthId, tournamentId, pouleId, onAddTeam }) {
+export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthId, tournamentId, onAddTeam }) {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true); // We voegen een loading state toe
   const [selectedTeam, setSelectedTeam] = useState(null);
@@ -15,7 +15,7 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
     fetch(`/api/team?strengthId=${strengthId}&tournamentId=${tournamentId}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Fetched Teams:", data); // Log de opgehaalde teams
+        console.log('Fetched Teams:', data); // Log de opgehaalde teams
         setTeams(data);
         setLoading(false); // Zet de loading state uit zodra de data is geladen
       })
@@ -37,14 +37,17 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
   };
 
   const handleAdd = () => {
+    console.log("handleAdd aangeroepen");
+
     if (selectedTeam && pouleId) {
       console.log("Team toegevoegd:", selectedTeam.id);
       console.log("pouleId:", pouleId); // Toon pouleId voor controle
-
-      onAddTeam(selectedTeam.id); // Voeg team toe aan de poule
+      onAddTeam(selectedTeam.id, pouleId); // Voeg team toe aan de poule
       onClose(); // Sluit de modal
     } else {
       console.log("Geen team of poule geselecteerd.");
+      console.log("selectedTeam:", selectedTeam);
+      console.log("pouleId:", pouleId);
     }
   };
 
