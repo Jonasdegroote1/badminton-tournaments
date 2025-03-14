@@ -26,6 +26,7 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
     fetch(`/api/team?strengthId=${strengthId}&tournamentId=${tournamentId}`)
       .then((res) => res.json())
       .then((data) => {
+        console.log('Fetched Teams:', data); // Log de opgehaalde teams
         setTeams(data);
         setLoading(false); // Zet de loading state uit zodra de data is geladen
       })
@@ -36,11 +37,11 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
   }, [isOpen, strengthId, tournamentId]);
 
   const handleTeamSelect = (event) => {
-    const selectedId = event.target.value;
-    const team = teams.find((team) => team.id === selectedId);
-
-    // Logging om te zien wat er gebeurt bij selectie
+    const selectedId = parseInt(event.target.value, 10); // Zorg ervoor dat de ID een getal is
     console.log('Selected Team ID:', selectedId);
+
+    // Zoek team op basis van ID
+    const team = teams.find((team) => team.id === selectedId);
     console.log('Selected Team:', team);
 
     setSelectedTeam(team); // Stel het geselecteerde team in
