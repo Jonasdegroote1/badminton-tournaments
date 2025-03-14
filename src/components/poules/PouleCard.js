@@ -1,28 +1,27 @@
-// components/PouleCard.js
 "use client";
 
 import { useState } from "react";
 import TeamItem from "./TeamItem";
-import TeamSelectionModal from "./TeamSelectionModal"; // Importeer de modal
+import TeamSelectionModal from "./TeamSelectionModal"; 
 import "../../styles/components/pouleCard.css";
 
-export default function PouleCard({ data, onDelete, onEdit, onRemoveTeam, handleAddTeam }) {
-  const [isModalOpen, setIsModalOpen] = useState(false); // Staat voor het openen/sluiten van de modal
+export default function PouleCard({ data, onDelete, onRemoveTeam, handleAddTeamToPoule }) {
+  const [isModalOpen, setIsModalOpen] = useState(false); 
 
   const handleDelete = () => {
-    onDelete(data.id);  // Verwijder de poule via de onDelete-functie
+    onDelete(data.id); 
   };
 
   const handleAddTeamClick = () => {
-    setIsModalOpen(true); // Open de modal
+    setIsModalOpen(true); 
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Sluit de modal
+    setIsModalOpen(false); 
   };
 
   const handleTeamAdd = (teamId) => {
-    handleAddTeam(data.id, data.strengthId); // Voeg het team toe aan de poule
+    handleAddTeamToPoule(teamId, data.id); // Call the function with both teamId and pouleId
   };
 
   return (
@@ -43,9 +42,10 @@ export default function PouleCard({ data, onDelete, onEdit, onRemoveTeam, handle
       <TeamSelectionModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        pouleId={data.id}
         strengthId={data.strengthId}
         tournamentId={data.tournamentId}
-        onAddTeam={handleTeamAdd}
+        onAddTeam={handleTeamAdd} 
       />
     </li>
   );

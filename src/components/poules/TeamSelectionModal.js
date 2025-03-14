@@ -1,23 +1,16 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import "../../styles/components/teamSelectionModal.css"; // Zorg ervoor dat je de juiste stijl hebt voor je modal
 
-export default function TeamSelectionModal({ isOpen, onClose, strengthId, tournamentId, onAddTeam }) {
+export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthId, tournamentId, onAddTeam }) {
   const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(true); // We voegen een loading state toe
+  const [loading, setLoading] = useState(true);
   const [selectedTeam, setSelectedTeam] = useState(null);
 
-  // Zorg ervoor dat we roleId loggen bij het openen van de modal en in de client-side omgeving
+  // Reset selectedTeam wanneer de modal wordt geopend
   useEffect(() => {
-    // Alleen in de browseromgeving (client-side) loggen
-    if (typeof window !== "undefined") {
-      const token = JSON.parse(localStorage.getItem("token")); // of haal het token uit cookies, context, etc.
-      if (token) {
-        console.log('Role ID:', token?.roleId); // Log de roleId
-      }
+    if (isOpen) {
+      setSelectedTeam(null); // Reset geselecteerd team
     }
-  }, []); // Dit wordt alleen uitgevoerd bij het laden van de component
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return; // Zorg ervoor dat de modal pas data ophaalt als deze zichtbaar is
@@ -26,6 +19,7 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
     fetch(`/api/team?strengthId=${strengthId}&tournamentId=${tournamentId}`)
       .then((res) => res.json())
       .then((data) => {
+        console.log('Fetched Teams:', data);
         setTeams(data);
         setLoading(false); // Zet de loading state uit zodra de data is geladen
       })
@@ -35,13 +29,35 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
       });
   }, [isOpen, strengthId, tournamentId]);
 
-  const handleTeamSelect = (team) => {
-    setSelectedTeam(team);
+  const handleTeamSelect = (event) => {
+    const selectedId = parseInt(event.target.value, 10);
+    console.log('Selected Team ID:', selectedId);
+    console.log('poufffle:', pouleId);
+
+    const team = teams.find((team) => team.id === selectedId);
+    console.log('Selected Team:', team);
+
+    setSelectedTeam(team); // Stel het geselecteerde team in
   };
 
   const handleAdd = () => {
-    if (selectedTeam) {
-      onAddTeam(selectedTeam.id); // Voeg team toe aan de poule
+    console.log("handleAdd aangeroepen");
+
+    if (!selectedTeam) {
+      console.log("❌ Geen team geselecteerd.");
+    } else {
+      console.log("✅ Geselecteerd team ID:", selectedTeam.id);
+    }
+
+    if (!pouleId) {
+      console.log("❌ Geen poule geselecteerd.", pouleId);
+    } else {
+      console.log("✅ Geselecteerde poule ID:", pouleId);
+    }
+
+    if (selectedTeam && pouleId) {
+      console.log("🚀 Team wordt toegevoegd...");
+      onAddTeam(selectedTeam.id, pouleId); // Voeg team toe aan de poule
       onClose(); // Sluit de modal
     }
   };
@@ -52,23 +68,27 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
         <div className="modal-content">
           <h2>Selecteer een Team</h2>
           {loading ? (
-            <p>Loading teams...</p> // Toon een loading bericht terwijl de data wordt opgehaald
+            <p>Loading teams...</p>
           ) : (
-            <ul className="team-list">
-              {teams.length > 0 ? (
-                teams.map((team) => (
-                  <li
-                    key={team.id}
-                    onClick={() => handleTeamSelect(team)}
-                    className={selectedTeam?.id === team.id ? "selected" : ""}
-                  >
-                    {team.player1.firstName} & {team.player2 ? team.player2.firstName : "Geen tweede speler"}
-                  </li>
-                ))
-              ) : (
-                <p>Geen teams beschikbaar</p> // Toon een bericht als er geen teams zijn
-              )}
-            </ul>
+            <form>
+              <label htmlFor="teamSelect">Kies een team:</label>
+              <select
+                id="teamSelect"
+                onChange={handleTeamSelect}
+                value={selectedTeam ? selectedTeam.id : ""}
+              >
+                <option value="" disabled>Kies een team</option>
+                {teams.length > 0 ? (
+                  teams.map((team) => (
+                    <option key={team.id} value={team.id}>
+                      {team.player1.firstName} & {team.player2 ? team.player2.firstName : "Geen tweede speler"}
+                    </option>
+                  ))
+                ) : (
+                  <option value="" disabled>Geen teams beschikbaar</option>
+                )}
+              </select>
+            </form>
           )}
           <button onClick={handleAdd} disabled={!selectedTeam}>Voeg team toe</button>
           <button onClick={onClose}>Annuleren</button>

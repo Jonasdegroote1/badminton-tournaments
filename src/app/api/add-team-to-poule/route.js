@@ -4,13 +4,16 @@ import { prisma } from "@/lib/prisma"; // Zorg ervoor dat je de prisma-client co
 
 export async function PUT(req) {
   try {
-    // Ontvang de teamId en pouleId uit de request body
-    const { teamId, pouleId } = await req.json();
+    const { teamId, pouleId } = await req.json(); // Haal teamId en pouleId uit de request body
+
+    if (!teamId || !pouleId) {
+      return new Response("Team ID en Poule ID zijn verplicht.", { status: 400 });
+    }
 
     // Voeg het team toe aan de poule door de juiste koppeling in de database te maken
     const updatedTeam = await prisma.team.update({
       where: {
-        id: teamId, // Zoek het team met het opgegeven ID
+        id: teamId,
       },
       data: {
         pouleId: pouleId, // Koppel het team aan de poule
