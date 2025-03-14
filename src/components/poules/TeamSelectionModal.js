@@ -35,7 +35,9 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
       });
   }, [isOpen, strengthId, tournamentId]);
 
-  const handleTeamSelect = (team) => {
+  const handleTeamSelect = (event) => {
+    const selectedId = event.target.value;
+    const team = teams.find((team) => team.id === selectedId);
     setSelectedTeam(team);
   };
 
@@ -54,21 +56,21 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
           {loading ? (
             <p>Loading teams...</p> // Toon een loading bericht terwijl de data wordt opgehaald
           ) : (
-            <ul className="team-list">
-              {teams.length > 0 ? (
-                teams.map((team) => (
-                  <li
-                    key={team.id}
-                    onClick={() => handleTeamSelect(team)}
-                    className={selectedTeam?.id === team.id ? "selected" : ""}
-                  >
-                    {team.player1.firstName} & {team.player2 ? team.player2.firstName : "Geen tweede speler"}
-                  </li>
-                ))
-              ) : (
-                <p>Geen teams beschikbaar</p> // Toon een bericht als er geen teams zijn
-              )}
-            </ul>
+            <form>
+              <label htmlFor="teamSelect">Kies een team:</label>
+              <select id="teamSelect" onChange={handleTeamSelect} value={selectedTeam?.id || ""}>
+                <option value="" disabled>Kies een team</option>
+                {teams.length > 0 ? (
+                  teams.map((team) => (
+                    <option key={team.id} value={team.id}>
+                      {team.player1.firstName} & {team.player2 ? team.player2.firstName : "Geen tweede speler"}
+                    </option>
+                  ))
+                ) : (
+                  <option value="" disabled>Geen teams beschikbaar</option>
+                )}
+              </select>
+            </form>
           )}
           <button onClick={handleAdd} disabled={!selectedTeam}>Voeg team toe</button>
           <button onClick={onClose}>Annuleren</button>
