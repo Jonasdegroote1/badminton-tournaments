@@ -1,102 +1,77 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import "../../styles/components/teamSelectionModal.css"; // Zorg voor de juiste CSS-stijl
+import "../../styles/components/teamSelectionModal.css"; // Zorg ervoor dat je de juiste stijl hebt voor je modal
 
-export default function TeamSelectionModal({
-  isOpen,
-  onClose,
-  strengthId,
-  tournamentId,
-  onTeamAdded,
-}) {
+export default function TeamSelectionModal({ isOpen, onClose, strengthId, tournamentId, onAddTeam }) {
   const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedTeamId, setSelectedTeamId] = useState(null);
-  const [selectedPouleId, setSelectedPouleId] = useState(null);
+  const [loading, setLoading] = useState(true); // We voegen een loading state toe
+  const [selectedTeam, setSelectedTeam] = useState(null);
+
+  // Zorg ervoor dat we roleId loggen bij het openen van de modal en in de client-side omgeving
+  useEffect(() => {
+    // Alleen in de browseromgeving (client-side) loggen
+    if (typeof window !== "undefined") {
+      const token = JSON.parse(localStorage.getItem("token")); // of haal het token uit cookies, context, etc.
+      if (token) {
+        console.log('Role ID:', token?.roleId); // Log de roleId
+      }
+    }
+  }, []); // Dit wordt alleen uitgevoerd bij het laden van de component
 
   useEffect(() => {
-    if (!isOpen) return;
-    setLoading(true);
+    if (!isOpen) return; // Zorg ervoor dat de modal pas data ophaalt als deze zichtbaar is
+    setLoading(true); // Start de loading state
 
     fetch(`/api/team?strengthId=${strengthId}&tournamentId=${tournamentId}`)
       .then((res) => res.json())
       .then((data) => {
         setTeams(data);
-        setLoading(false);
+        setLoading(false); // Zet de loading state uit zodra de data is geladen
       })
       .catch((error) => {
         console.error("Error fetching teams:", error);
-        setLoading(false);
+        setLoading(false); // Zet loading uit zelfs als er een fout is
       });
   }, [isOpen, strengthId, tournamentId]);
 
-  useEffect(() => {
-    if (!strengthId || !tournamentId) return;
-
-    // Dynamisch ophalen van de pouleId op basis van strengthId en tournamentId
-    fetch(`/api/get-poule-id?strengthId=${strengthId}&tournamentId=${tournamentId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setSelectedPouleId(data.pouleId); // Stel de pouleId in
-      })
-      .catch((error) => {
-        console.error("Error fetching pouleId:", error);
-      });
-  }, [strengthId, tournamentId]);
-
-  const handleSelectTeam = (teamId) => {
-    setSelectedTeamId(teamId);
+  const handleTeamSelect = (team) => {
+    setSelectedTeam(team);
   };
 
-  const handleConfirmSelection = () => {
-    if (!selectedTeamId || !strengthId || !selectedPouleId) {
-      console.log("Geen team geselecteerd, geen strengthId of geen pouleId!");
-      return;
+  const handleAdd = () => {
+    if (selectedTeam) {
+      onAddTeam(selectedTeam.id); // Voeg team toe aan de poule
+      onClose(); // Sluit de modal
     }
-
-    console.log("Bevestigen team toevoeging:", selectedTeamId);
-
-    fetch(`/api/add-team-to-poule`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        teamId: selectedTeamId,
-        strengthId: strengthId,
-        pouleId: selectedPouleId, // Gebruik het dynamisch geselecteerde pouleId
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Team toegevoegd:", data);
-        onTeamAdded(); // Refresh de lijst met teams in de poule
-        onClose(); // Sluit de modal
-      })
-      .catch((error) => {
-        console.error("Fout bij toevoegen team aan poule:", error);
-      });
   };
 
   return (
     isOpen && (
       <div className="modal-overlay">
         <div className="modal-content">
-          <h2>Voeg een team toe</h2>
+          <h2>Selecteer een Team</h2>
           {loading ? (
-            <p>Teams laden...</p>
+            <p>Loading teams...</p> // Toon een loading bericht terwijl de data wordt opgehaald
           ) : (
-            <select onChange={(e) => handleSelectTeam(e.target.value)}>
-              <option value="">Selecteer een team</option>
-              {teams.map((team) => (
-                <option key={team.id} value={team.id}>
-                  {team.player1.firstName} &{" "}
-                  {team.player2 ? team.player2.firstName : "Geen tweede speler"}
-                </option>
-              ))}
-            </select>
+            <ul className="team-list">
+              {teams.length > 0 ? (
+                teams.map((team) => (
+                  <li
+                    key={team.id}
+                    onClick={() => handleTeamSelect(team)}
+                    className={selectedTeam?.id === team.id ? "selected" : ""}
+                  >
+                    {team.player1.firstName} & {team.player2 ? team.player2.firstName : "Geen tweede speler"}
+                  </li>
+                ))
+              ) : (
+                <p>Geen teams beschikbaar</p> // Toon een bericht als er geen teams zijn
+              )}
+            </ul>
           )}
+          <button onClick={handleAdd} disabled={!selectedTeam}>Voeg team toe</button>
           <button onClick={onClose}>Annuleren</button>
-          <button onClick={handleConfirmSelection}>Bevestigen</button>
         </div>
       </div>
     )
