@@ -1,11 +1,9 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import "../../styles/components/teamSelectionModal.css"; // Zorg ervoor dat je de juiste stijl hebt voor je modal
+import "../../styles/components/teamSelectionModal.css";
 
 export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthId, tournamentId, onAddTeam }) {
   const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(true); // We voegen een loading state toe
+  const [loading, setLoading] = useState(true);
   const [selectedTeam, setSelectedTeam] = useState(null);
 
   useEffect(() => {
@@ -15,7 +13,7 @@ export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthI
     fetch(`/api/team?strengthId=${strengthId}&tournamentId=${tournamentId}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log('Fetched Teams:', data); // Log de opgehaalde teams
+        console.log('Fetched Teams:', data);
         setTeams(data);
         setLoading(false); // Zet de loading state uit zodra de data is geladen
       })
@@ -26,10 +24,9 @@ export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthI
   }, [isOpen, strengthId, tournamentId]);
 
   const handleTeamSelect = (event) => {
-    const selectedId = parseInt(event.target.value, 10); // Zorg ervoor dat de ID een getal is
+    const selectedId = parseInt(event.target.value, 10);
     console.log('Selected Team ID:', selectedId);
 
-    // Zoek team op basis van ID
     const team = teams.find((team) => team.id === selectedId);
     console.log('Selected Team:', team);
 
@@ -41,13 +38,11 @@ export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthI
 
     if (selectedTeam && pouleId) {
       console.log("Team toegevoegd:", selectedTeam.id);
-      console.log("pouleId:", pouleId); // Toon pouleId voor controle
+      console.log("pouleId:", pouleId);
       onAddTeam(selectedTeam.id, pouleId); // Voeg team toe aan de poule
       onClose(); // Sluit de modal
     } else {
       console.log("Geen team of poule geselecteerd.");
-      console.log("selectedTeam:", selectedTeam);
-      console.log("pouleId:", pouleId);
     }
   };
 
@@ -57,14 +52,14 @@ export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthI
         <div className="modal-content">
           <h2>Selecteer een Team</h2>
           {loading ? (
-            <p>Loading teams...</p> // Toon een loading bericht terwijl de data wordt opgehaald
+            <p>Loading teams...</p>
           ) : (
             <form>
               <label htmlFor="teamSelect">Kies een team:</label>
               <select
                 id="teamSelect"
                 onChange={handleTeamSelect}
-                value={selectedTeam ? selectedTeam.id : ""} // Zorg ervoor dat de waarde goed is ingesteld
+                value={selectedTeam ? selectedTeam.id : ""}
               >
                 <option value="" disabled>Kies een team</option>
                 {teams.length > 0 ? (
