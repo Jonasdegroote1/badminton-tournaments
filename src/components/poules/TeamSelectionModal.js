@@ -5,44 +5,40 @@ import "../../styles/components/teamSelectionModal.css"; // Zorg ervoor dat je d
 
 export default function TeamSelectionModal({ isOpen, onClose, strengthId, tournamentId, pouleId, onAddTeam }) {
   const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(true); // We voegen een loading state toe
+  const [loading, setLoading] = useState(true);
   const [selectedTeam, setSelectedTeam] = useState(null);
 
   useEffect(() => {
-    if (!isOpen) return; // Zorg ervoor dat de modal pas data ophaalt als deze zichtbaar is
-    setLoading(true); // Start de loading state
+    if (!isOpen) return;
+    setLoading(true);
 
     fetch(`/api/team?strengthId=${strengthId}&tournamentId=${tournamentId}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log('Fetched Teams:', data); // Log de opgehaalde teams
         setTeams(data);
-        setLoading(false); // Zet de loading state uit zodra de data is geladen
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching teams:", error);
-        setLoading(false); // Zet loading uit zelfs als er een fout is
+        setLoading(false);
       });
   }, [isOpen, strengthId, tournamentId]);
 
+  // Log de props om te controleren of pouleId goed wordt doorgegeven
+  console.log("Received props in modal:", { pouleId, strengthId, tournamentId });
+
   const handleTeamSelect = (event) => {
-    const selectedId = parseInt(event.target.value, 10); // Zorg ervoor dat de ID een getal is
-    console.log('Selected Team ID:', selectedId);
-
-    // Zoek team op basis van ID
+    const selectedId = parseInt(event.target.value, 10);
     const team = teams.find((team) => team.id === selectedId);
-    console.log('Selected Team:', team);
-
-    setSelectedTeam(team); // Stel het geselecteerde team in
+    setSelectedTeam(team);
   };
 
   const handleAdd = () => {
     if (selectedTeam) {
-      // Log het geselecteerde team en de pouleId voor controle
       console.log("Team toegevoegd:", selectedTeam.id);
-      console.log("Poule ID:", pouleId); // Voeg de pouleId toe aan de log
+      console.log("Poule ID:", pouleId); // Controleer de pouleId
       onAddTeam(selectedTeam.id, pouleId); // Voeg team toe aan de poule
-      onClose(); // Sluit de modal
+      onClose();
     }
   };
 
@@ -52,14 +48,14 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
         <div className="modal-content">
           <h2>Selecteer een Team</h2>
           {loading ? (
-            <p>Loading teams...</p> // Toon een loading bericht terwijl de data wordt opgehaald
+            <p>Loading teams...</p>
           ) : (
             <form>
               <label htmlFor="teamSelect">Kies een team:</label>
               <select
                 id="teamSelect"
                 onChange={handleTeamSelect}
-                value={selectedTeam ? selectedTeam.id : ""} // Zorg ervoor dat de waarde goed is ingesteld
+                value={selectedTeam ? selectedTeam.id : ""}
               >
                 <option value="" disabled>Kies een team</option>
                 {teams.length > 0 ? (
