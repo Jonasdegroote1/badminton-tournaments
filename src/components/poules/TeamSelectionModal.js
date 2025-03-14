@@ -8,17 +8,6 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
   const [loading, setLoading] = useState(true); // We voegen een loading state toe
   const [selectedTeam, setSelectedTeam] = useState(null);
 
-  // Zorg ervoor dat we roleId loggen bij het openen van de modal en in de client-side omgeving
-  useEffect(() => {
-    // Alleen in de browseromgeving (client-side) loggen
-    if (typeof window !== "undefined") {
-      const token = JSON.parse(localStorage.getItem("token")); // of haal het token uit cookies, context, etc.
-      if (token) {
-        console.log('Role ID:', token?.roleId); // Log de roleId
-      }
-    }
-  }, []); // Dit wordt alleen uitgevoerd bij het laden van de component
-
   useEffect(() => {
     if (!isOpen) return; // Zorg ervoor dat de modal pas data ophaalt als deze zichtbaar is
     setLoading(true); // Start de loading state
@@ -49,6 +38,7 @@ export default function TeamSelectionModal({ isOpen, onClose, strengthId, tourna
 
   const handleAdd = () => {
     if (selectedTeam) {
+      console.log("Team toegevoegd:", selectedTeam.id);
       onAddTeam(selectedTeam.id); // Voeg team toe aan de poule
       onClose(); // Sluit de modal
     }
