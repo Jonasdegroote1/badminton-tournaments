@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect } from "react";
 import PouleCard from "./PouleCard";
 import "../../styles/components/pouleManagement.css";
@@ -82,8 +81,8 @@ export default function PouleManagement({ poules, setPoules }) {
   };
 
   const handleOpenModal = (pouleId) => {
-    setSelectedPouleId(pouleId);
-    setIsModalOpen(true);
+    setSelectedPouleId(pouleId);  // Sla de geselecteerde poule op
+    setIsModalOpen(true); // Open de modal
   };
 
   const handleCloseModal = () => {
@@ -112,6 +111,7 @@ export default function PouleManagement({ poules, setPoules }) {
       <TeamSelectionModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        pouleId={selectedPouleId} // Geef de geselecteerde pouleId door
         strengthId={selectedTournament.strengthId}
         tournamentId={selectedTournament.id}
         onAddTeam={handleAddTeamToPoule} // Zorg ervoor dat je de juiste functie doorgeeft
