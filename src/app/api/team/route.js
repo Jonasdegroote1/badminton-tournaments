@@ -1,3 +1,6 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]/route";
+
 const { prisma } = require("@/lib/prisma");
 
 // /pages/api/teams.js
@@ -114,33 +117,46 @@ export async function PUT(request) {
 }
 
 export async function DELETE(request) {
-  
-  const session = await getServerSession({ req: request, ...authOptions });
-  
-    if (!session || session.user.roleId !== 1) {
-      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
-    }
+  // Haal teamId op uit de URL queryparameter
+  const url = new URL(request.url);
+  const teamId = url.searchParams.get("teamId");
 
-  console.log("API request received");
+  if (!teamId || isNaN(teamId)) {
+    return new Response(JSON.stringify({ error: "teamId is vereist en moet een geldig nummer zijn" }), { status: 400 });
+  }
+
+  // Verkrijg sessie en controleer rol
+  const session = await getServerSession({ req: request, ...authOptions });
+
+  if (!session) {
+    return new Response(JSON.stringify({ error: "Geen geldige sessie" }), { status: 401 });
+  }
+
+  if (session.user.roleId !== 1) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+  }
 
   try {
-    // Parse the request body correctly
-    const { id } = await request.json(); 
-
-    // Delete the team by ID
-    const team = await prisma.team.delete({
-      where: { id }
+    // Zoek het team in de database
+    const team = await prisma.team.findUnique({
+      where: { id: parseInt(teamId) },
     });
 
-    console.log("Team deleted from database:", team);
+    if (!team) {
+      return new Response(JSON.stringify({ error: "Team niet gevonden" }), { status: 404 });
+    }
 
-    return new Response(JSON.stringify({ message: "Team deleted successfully", team }), {
+    // Verwijder het team uit de database
+    const deletedTeam = await prisma.team.delete({
+      where: { id: parseInt(teamId) },
+    });
+
+    return new Response(JSON.stringify({ message: "Team succesvol verwijderd", team: deletedTeam }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error deleting team:", error);
-    return new Response(JSON.stringify({ error: "Error deleting team" }), {
+    return new Response(JSON.stringify({ error: "Fout bij het verwijderen van het team" }), {
       status: 500,
     });
   }
