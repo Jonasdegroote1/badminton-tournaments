@@ -12,18 +12,49 @@ enum Session {
   NM  // Namiddag
 }
 
-model Tournament {
-  id        Int      @id @default(autoincrement())
-  name      String  
-  date      String   @db.VarChar(10)  // Opslaan als "YYYY-MM-DD"
-  session   Session  // VM of NM
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Player {
+  id            Int              @id @default(autoincrement())
+  firstName     String
+  lastName      String
+  clubId        Int?
+  mail          String?           @unique
+  phone         String?           @unique
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  club          Club?             @relation(fields: [clubId], references: [id])
+  teams1        Team[]            @relation("Player1")
+  teams2        Team[]            @relation("Player2")
+  playerTournaments PlayerTournament[]  // Relatie met PlayerTournament
 
-  poules     Poule[]
-  matches    Match[]
-  standings  Standing[]
-  teams      Team[]
+  @@index([clubId], map: "idx_player_clubId")
+}
+
+model Tournament {
+  id            Int              @id @default(autoincrement())
+  name          String
+  date          String           @db.VarChar(10)
+  session       Session
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  poules        Poule[]
+  matches       Match[]
+  standings     Standing[]
+  teams         Team[]
+  playerTournaments PlayerTournament[]  // Relatie met PlayerTournament
+}
+
+model PlayerTournament {
+  id          Int        @id @default(autoincrement())
+  playerId    Int
+  tournamentId Int
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  player      Player     @relation(fields: [playerId], references: [id])
+  tournament  Tournament @relation(fields: [tournamentId], references: [id])
+
+  @@index([playerId], map: "idx_player_tournament_playerId")
+  @@index([tournamentId], map: "idx_player_tournament_tournamentId")
 }
 
 model Club {
@@ -31,23 +62,7 @@ model Club {
   name      String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  players   Player[]
-}
-
-model Player {
-  id        Int       @id @default(autoincrement())
-  firstName String
-  lastName  String
-  clubId    Int?
-  mail      String?   @unique
-  phone     String?   @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  club      Club?     @relation(fields: [clubId], references: [id])
-  teams1    Team[]    @relation("Player1")
-  teams2    Team[]    @relation("Player2")
-
-  @@index([clubId], map: "idx_player_clubId")
+  players   Player[] 
 }
 
 model Team {
@@ -65,7 +80,7 @@ model Team {
   poule      Poule?     @relation(fields: [pouleId], references: [id])
   strength   Strength   @relation(fields: [strengthId], references: [id])
   matches    TeamsInMatch[]
-  tournament Tournament  @relation(fields: [tournamentId], references: [id])
+  tournament Tournament @relation(fields: [tournamentId], references: [id])
 
   @@index([player1Id], map: "idx_team_player1Id")
   @@index([player2Id], map: "idx_team_player2Id")
@@ -77,8 +92,8 @@ model Team {
 model Strength {
   id     Int     @id @default(autoincrement())
   name   String  @unique
-  poules Poule[]
-  teams  Team[]
+  poules Poule[] 
+  teams  Team[] 
 }
 
 model Poule {
@@ -88,7 +103,7 @@ model Poule {
   name         String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  matches      Match[]
+  matches      Match[] 
   strength     Strength @relation(fields: [strengthId], references: [id])
   standings    Standing[]
   teams        Team[]
@@ -108,8 +123,8 @@ model Match {
   updatedAt    DateTime @updatedAt
   court        Court    @relation(fields: [courtId], references: [id])
   poule        Poule    @relation(fields: [pouleId], references: [id])
-  setResults   SetResult[]
-  teams        TeamsInMatch[]
+  setResults   SetResult[] // Geen onDelete hier
+  teams        TeamsInMatch[] // Geen onDelete hier
   tournament   Tournament @relation(fields: [tournamentId], references: [id])
 
   @@index([courtId], map: "idx_match_courtId")
@@ -121,7 +136,7 @@ model TeamsInMatch {
   id      Int   @id @default(autoincrement())
   matchId Int
   teamId  Int
-  match   Match @relation(fields: [matchId], references: [id])
+  match   Match @relation(fields: [matchId], references: [id], onDelete: Cascade) // onDelete aan de omgekeerde kant
   team    Team  @relation(fields: [teamId], references: [id])
 
   @@index([matchId], map: "idx_teamsInMatch_matchId")
@@ -134,9 +149,7 @@ model SetResult {
   setNumber  Int
   team1Score Int
   team2Score Int
-  match      Match @relation(fields: [matchId], references: [id])
-
-  @@index([matchId], map: "idx_setResult_matchId")
+  match      Match @relation(fields: [matchId], references: [id], onDelete: Cascade) // onDelete aan de omgekeerde kant
 }
 
 model Standing {
@@ -151,7 +164,7 @@ model Standing {
   setsWon       Int  @default(0)
   setsLost      Int  @default(0)
   poule         Poule @relation(fields: [pouleId], references: [id])
-  team          Team  @relation(fields: [teamId], references: [id])
+  team          Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
   tournament    Tournament @relation(fields: [tournamentId], references: [id])
 
   @@index([pouleId], map: "idx_standings_pouleId")
@@ -161,7 +174,7 @@ model Standing {
 model Court {
   id      Int     @id @default(autoincrement())
   name    String  @unique
-  matches Match[]
+  matches Match[] 
 }
 
 model User {
@@ -183,5 +196,5 @@ model Role {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users     User[]
+  users     User[] 
 }
