@@ -57,3 +57,23 @@
   background-color: #e5e7eb;
   color: #6b7280;
 }
+
+
+/* Voeg deze CSS toe aan teamsTable.css of een aparte stylesheet */
+.add-team-button-container {
+  margin: 20px 0;
+}
+
+.add-team-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add-team-button:hover {
+  background-color: #45a049;
+}

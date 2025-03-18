@@ -40,29 +40,37 @@ export async function GET(request) {
   }
 }
 
-
 export async function POST(request) {
-  
   const session = await getServerSession({ req: request, ...authOptions });
-  
-    if (!session || session.user.roleId !== 1) {
-      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
-    }
+
+  // Controleer of de gebruiker een admin is
+  if (!session || session.user.roleId !== 1) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+  }
 
   console.log("API request received");
 
   try {
-    // Parse the request body correctly
-    const { player1Id, player2Id, strengthId, poolId } = await request.json();
+    // Parse de request body
+    const { player1Id, player2Id, strengthId, poolId, tournamentId } = await request.json();
 
-    // Create a new team entry in the database
+    // Controleer of tournamentId aanwezig is
+    if (!tournamentId) {
+      return new Response(
+        JSON.stringify({ error: "Tournament ID is required" }),
+        { status: 400 }
+      );
+    }
+
+    // Maak een nieuw team aan in de database
     const team = await prisma.team.create({
       data: {
-        player1Id,  // Store foreign key directly
+        player1Id,
         player2Id,
         strengthId,
-        poolId
-      }
+        pouleId: poolId || null,  // Als poolId niet aanwezig is, zet null
+        tournamentId,  // Voeg tournamentId toe
+      },
     });
 
     console.log("Team created in database:", team);
@@ -73,12 +81,12 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error("Error creating team:", error);
-    return new Response(JSON.stringify({ error: "Error creating team" }), {
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({ error: "Error creating team", details: error.message }),
+      { status: 500 }
+    );
   }
 }
-
 
 export async function PUT(request) {
   
