@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma"; 
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -41,18 +43,17 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-
   const session = await getServerSession({ req: request, ...authOptions });
-  
-    if (!session || session.user.roleId !== 1) {
-      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
-    }
 
-  const { firstName, lastName, clubId } = await request.json();
+  if (!session || session.user.roleId !== 1) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+  }
+
+  const { firstName, lastName, clubId, mail, phone } = await request.json();
 
   try {
     const player = await prisma.player.create({
-      data: { firstName, lastName, clubId },
+      data: { firstName, lastName, clubId, mail, phone },
     });
 
     console.log('Player created in database:', player);
