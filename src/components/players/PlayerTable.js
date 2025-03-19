@@ -47,7 +47,7 @@ export default function PlayerTable() {
 
       <div className="player-grid">
         {players.map((player) => (
-          <PlayerRow key={player.id} player={player} />
+          <PlayerRow key={player.id} player={player} tournamentId={tournamentId} />
         ))}
       </div>
     </>
