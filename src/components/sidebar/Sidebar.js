@@ -15,9 +15,11 @@ export default function Sidebar() {
       <nav className="sidebar-nav">
         <NavItem icon="🏠" label="Dashboard" active href="/dashboard" />
         <NavItem icon="⚽" label="Poules" href="/dashboard/poules" />
+        <NavItem icon="👤" label="Players" href="/dashboard/players" />
         <NavItem icon="👥" label="Teams" href="/dashboard/teams" />
         <NavItem icon="🏆" label="Matches" href="/dashboard/matches" />
         <NavItem icon="📅" label="Schedule" href="/dashboard/schedule" />
+        <NavItem icon="📊" label="Results" href="/dashboard/results"/>
       </nav>
 
       <OtherTournaments 

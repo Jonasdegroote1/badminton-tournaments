@@ -1,19 +1,41 @@
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request) {
-  try {
-    const players = await prisma.player.findMany();
+  const { searchParams } = new URL(request.url);
+  const tournamentId = parseInt(searchParams.get("tournamentId"));
 
-    console.log('Players in API:', players);
+  if (isNaN(tournamentId)) {
+    return new Response(JSON.stringify({ error: "Ongeldig tournamentId" }), { 
+      status: 400, 
+      headers: { "Content-Type": "application/json" } 
+    });
+  }
+
+  try {
+    const players = await prisma.player.findMany({
+      where: {
+        playerTournaments: {
+          some: {
+            tournamentId: tournamentId,
+          },
+        },
+      },
+      include: { 
+        club: true // club info ophalen
+      },
+    });
+
+    console.log(`Players for tournament ${tournamentId}:`, players);
 
     return new Response(JSON.stringify(players), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error('Error fetching players:', error);
-    return new Response(JSON.stringify({ error: 'Error fetching players' }), {
+    console.error("Error fetching players:", error);
+    return new Response(JSON.stringify({ error: "Error fetching players" }), {
       status: 500,
+      headers: { "Content-Type": "application/json" },
     });
   }
 }
