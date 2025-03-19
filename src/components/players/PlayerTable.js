@@ -1,3 +1,4 @@
+// components/PlayerTable.js
 "use client";
 import { useEffect, useState } from "react";
 import AddPlayerForm from "./AddPlayerForm";

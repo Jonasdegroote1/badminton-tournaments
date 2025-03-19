@@ -1,0 +1,119 @@
+/* styles/components/AddPlayerForm.css */
+
+/* Basisinstellingen voor de formuliercontainer */
+.add-player-form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Titel van het formulier */
+.add-player-form h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Stijl voor foutmeldingen */
+.error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Algemene stijlen voor formuliervelden */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"] {
+  background-color: #f9f9f9;
+}
+
+/* Knoppen aan de onderkant van het formulier */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-actions .btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.form-actions .btn-primary {
+  background-color: #3498db;
+  color: white;
+  border: none;
+}
+
+.form-actions .btn-primary:disabled {
+  background-color: #95a5a6;
+}
+
+.form-actions .btn-secondary {
+  background-color: #95a5a6;
+  color: white;
+  border: none;
+}
+
+.form-actions .btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.form-actions .btn-secondary:hover {
+  background-color: #7f8c8d;
+}
+
+/* Zorg ervoor dat de formgroup en inputs goed worden uitgelijnd */
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
+}
+
+/* Zorg voor een nette margin en padding overal in de body */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ecf0f1;
+  padding: 40px;
+}
+
+/* Zorg ervoor dat de knoppen goed gepositioneerd zijn voor responsief ontwerp */
+@media (max-width: 600px) {
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+}
