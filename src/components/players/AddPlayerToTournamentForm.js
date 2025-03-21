@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import Modal from "../Modal";
+import Modal from "../modal";
 import "../../styles/components/addPlayerToTournamentForm.css";
 
 export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPlayerAdded }) {
