@@ -30,3 +30,22 @@ export async function DELETE(req) {
     return new Response(JSON.stringify({ error: "Error bij verwijderen relatie" }), { status: 500 });
   }
 }
+
+export async function POST(request) {
+  const body = await request.json();
+  const { playerId, tournamentId } = body;
+
+  if (!playerId || !tournamentId) {
+    return new Response(JSON.stringify({ error: "playerId en tournamentId zijn verplicht" }), { status: 400 });
+  }
+
+  try {
+    const newEntry = await prisma.playerTournament.create({
+      data: { playerId, tournamentId },
+    });
+
+    return new Response(JSON.stringify(newEntry), { status: 201 });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: "Error adding player to tournament" }), { status: 500 });
+  }
+}

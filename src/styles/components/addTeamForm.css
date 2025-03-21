@@ -40,7 +40,7 @@ select {
 }
 
 .form-container button, .add-team-button {
-  width: 15%;
+  width: max-content;
   padding: 12px;
   background-color: #4CAF50;
   color: white;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Modal from "../modal"; // Zorg ervoor dat je de juiste pad hebt voor je Modal component
 import "../../styles/components/addTeamForm.css";
 
 export default function AddTeamForm({ tournamentId, onClose }) {
@@ -10,14 +11,21 @@ export default function AddTeamForm({ tournamentId, onClose }) {
   const [player2, setPlayer2] = useState(null);
   const [strengthId, setStrengthId] = useState(null);
   const [error, setError] = useState('');
+  const [usedPlayerIds, setUsedPlayerIds] = useState([]); // Gebruikte speler-ID's bijhouden
 
   // Haal spelers op
   useEffect(() => {
-    fetch('/api/players')
+    fetch('/api/players?tournamentId=' + tournamentId)  // Het toernooi-ID meegeven aan de API-aanroep
       .then((res) => res.json())
-      .then((data) => setPlayers(data))
+      .then((data) => {
+        setPlayers(data);
+
+        // Haal een lijst van gebruikte speler-ID's op, **alleen in dit specifieke toernooi**
+        const usedIds = data.filter(player => player.teamId === tournamentId).map(player => player.id);
+        setUsedPlayerIds(usedIds);
+      })
       .catch((error) => console.error("Fout bij ophalen spelers:", error));
-  }, []);
+  }, [tournamentId]);
 
   // Haal sterktes op
   useEffect(() => {
@@ -33,15 +41,15 @@ export default function AddTeamForm({ tournamentId, onClose }) {
       return;
     }
 
-    // Cast de velden naar nummer (number) type, gebruik parseInt() of Number()
+    // Cast de velden naar nummer (number) type
     const teamData = {
-      player1Id: Number(player1),  // Cast naar number
-      player2Id: Number(player2),  // Cast naar number
-      strengthId: Number(strengthId),  // Cast naar number
-      tournamentId: Number(tournamentId),  // Cast naar number
+      player1Id: Number(player1),
+      player2Id: Number(player2),
+      strengthId: Number(strengthId),
+      tournamentId: Number(tournamentId),
     };
 
-    console.log('Verzonden data:', teamData); // Log de data voor debugging
+    console.log('Verzonden data:', teamData);
 
     fetch('/api/team', {
       method: 'POST',
@@ -52,13 +60,13 @@ export default function AddTeamForm({ tournamentId, onClose }) {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error('Fout bij serveraanroep: ' + res.statusText); // Gooi een error als status niet OK is
+          throw new Error('Fout bij serveraanroep: ' + res.statusText);
         }
         return res.json();
       })
       .then((data) => {
         alert('Team succesvol toegevoegd');
-        onClose();  // Roep de onClose functie aan om het formulier te sluiten
+        onClose();
       })
       .catch((err) => {
         console.error("Fout bij toevoegen team:", err);
@@ -66,52 +74,56 @@ export default function AddTeamForm({ tournamentId, onClose }) {
       });
   };
 
+  // Filter spelers die **niet** al aan een team gekoppeld zijn in dit toernooi
+  const availablePlayers = players.filter(player => !usedPlayerIds.includes(player.id));
+
   return (
-    <div>
-      <h3>Voeg team toe</h3>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
+    <Modal onClose={onClose}>
       <div>
-        <label>Speler 1:</label>
-        <select value={player1} onChange={(e) => setPlayer1(e.target.value)}>
-          <option value={null}>Kies Speler 1</option>
-          {players.map((player) => (
-            <option key={player.id} value={player.id}>
-              {player.firstName} {player.lastName}
-            </option>
-          ))}
-        </select>
+        <h3>Voeg team toe</h3>
+
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+
+        <div>
+          <label>Speler 1:</label>
+          <select value={player1} onChange={(e) => setPlayer1(e.target.value)}>
+            <option value={null}>Kies Speler 1</option>
+            {availablePlayers.map((player) => (
+              <option key={player.id} value={player.id}>
+                {player.firstName} {player.lastName}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label>Speler 2:</label>
+          <select value={player2} onChange={(e) => setPlayer2(e.target.value)}>
+            <option value={null}>Kies Speler 2</option>
+            {availablePlayers.map((player) => (
+              <option key={player.id} value={player.id}>
+                {player.firstName} {player.lastName}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label>Sterkte:</label>
+          <select value={strengthId} onChange={(e) => setStrengthId(e.target.value)}>
+            <option value={null}>Kies Sterkte</option>
+            {strengths.map((strength) => (
+              <option key={strength.id} value={strength.id}>
+                {strength.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button className="add-team-button" onClick={handleAddTeam}>Voeg Team Toe</button>
+
+        <button className="close-button" onClick={onClose}>Sluit Formulier</button>
       </div>
-
-      <div>
-        <label>Speler 2:</label>
-        <select value={player2} onChange={(e) => setPlayer2(e.target.value)}>
-          <option value={null}>Kies Speler 2</option>
-          {players.map((player) => (
-            <option key={player.id} value={player.id}>
-              {player.firstName} {player.lastName}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label>Sterkte:</label>
-        <select value={strengthId} onChange={(e) => setStrengthId(e.target.value)}>
-          <option value={null}>Kies Sterkte</option>
-          {strengths.map((strength) => (
-            <option key={strength.id} value={strength.id}>
-              {strength.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <button className="add-team-button" onClick={handleAddTeam}>Voeg Team Toe</button>
-
-      {/* Close Button om het formulier te sluiten */}
-      <button className="close-button" onClick={onClose}>Sluit Formulier</button>
-    </div>
+    </Modal>
   );
 }

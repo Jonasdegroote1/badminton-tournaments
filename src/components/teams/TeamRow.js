@@ -3,7 +3,7 @@ import "../../styles/components/teamRow.css";
 export default function TeamRow({ team }) {
 
   const onDeleteTeam = () => {
-  if (confirm(`Weet je zeker dat je team van ${team.player1.firstName} & ${team.player2.firstName} wilt verwijderen?`)) {
+  if (confirm(`Weet je zeker dat je team van ${team.player1.firstName} & ${ team.player2 ? team.player2.firstName: "" } wilt verwijderen?`)) {
     // Gebruik de queryparameter teamId in de URL
     fetch(`/api/team?teamId=${team.id}`, {
       method: 'DELETE',
@@ -26,7 +26,7 @@ export default function TeamRow({ team }) {
         <p>{team.player1.firstName} {team.player1.lastName}</p>
       </div>
       <div className="team-row_player">
-        <p>{team.player2.firstName} {team.player2.lastName}</p>
+        <p>{team.player2 ? team.player2.firstName: "---"} {team.player2 ? team.player2.lastName: ""}</p>
       </div>
 
       <div className="team-row_poule">
