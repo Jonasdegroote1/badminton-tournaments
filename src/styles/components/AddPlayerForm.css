@@ -99,13 +99,6 @@ select:focus {
   box-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
 }
 
-/* Zorg voor een nette margin en padding overal in de body */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #ecf0f1;
-  padding: 40px;
-}
-
 /* Zorg ervoor dat de knoppen goed gepositioneerd zijn voor responsief ontwerp */
 @media (max-width: 600px) {
   .form-actions {
