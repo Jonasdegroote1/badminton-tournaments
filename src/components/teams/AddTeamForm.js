@@ -10,16 +10,21 @@ export default function AddTeamForm({ tournamentId, onClose }) {
   const [player2, setPlayer2] = useState(null);
   const [strengthId, setStrengthId] = useState(null);
   const [error, setError] = useState('');
+  const [usedPlayerIds, setUsedPlayerIds] = useState([]); // Gebruikte speler-ID's bijhouden
 
-  // Haal spelers op, met juiste tournamentId
+  // Haal spelers op
   useEffect(() => {
-    if (!tournamentId) return; // Zorg ervoor dat tournamentId aanwezig is
-    const url = `/api/players?tournamentId=${tournamentId}`;
-    fetch(url)
+    fetch('/api/players?tournamentId=' + tournamentId)  // Het toernooi-ID meegeven aan de API-aanroep
       .then((res) => res.json())
-      .then((data) => setPlayers(data))
+      .then((data) => {
+        setPlayers(data);
+
+        // Haal een lijst van gebruikte speler-ID's op (alle spelers die al aan een team gekoppeld zijn)
+        const usedIds = data.filter(player => player.teamId !== null).map(player => player.id);
+        setUsedPlayerIds(usedIds);
+      })
       .catch((error) => console.error("Fout bij ophalen spelers:", error));
-  }, [tournamentId]); // Afhankelijk van tournamentId
+  }, [tournamentId]);
 
   // Haal sterktes op
   useEffect(() => {
@@ -60,13 +65,16 @@ export default function AddTeamForm({ tournamentId, onClose }) {
       })
       .then((data) => {
         alert('Team succesvol toegevoegd');
-        onClose();  // Sluit het formulier
+        onClose();
       })
       .catch((err) => {
         console.error("Fout bij toevoegen team:", err);
         alert('Fout bij het toevoegen van het team');
       });
   };
+
+  // Filter spelers die al aan een team zijn gekoppeld
+  const availablePlayers = players.filter(player => !usedPlayerIds.includes(player.id));
 
   return (
     <div>
@@ -78,7 +86,7 @@ export default function AddTeamForm({ tournamentId, onClose }) {
         <label>Speler 1:</label>
         <select value={player1} onChange={(e) => setPlayer1(e.target.value)}>
           <option value={null}>Kies Speler 1</option>
-          {players.map((player) => (
+          {availablePlayers.map((player) => (
             <option key={player.id} value={player.id}>
               {player.firstName} {player.lastName}
             </option>
@@ -90,7 +98,7 @@ export default function AddTeamForm({ tournamentId, onClose }) {
         <label>Speler 2:</label>
         <select value={player2} onChange={(e) => setPlayer2(e.target.value)}>
           <option value={null}>Kies Speler 2</option>
-          {players.map((player) => (
+          {availablePlayers.map((player) => (
             <option key={player.id} value={player.id}>
               {player.firstName} {player.lastName}
             </option>
