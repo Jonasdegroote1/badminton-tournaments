@@ -53,7 +53,7 @@ export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPla
             <option value="">-- Selecteer speler --</option>
             {availablePlayers.map((player) => (
               <option key={player.id} value={player.id}>
-                {player.naam} ({player.club?.naam || "Geen club"})
+                {player.firstName} {player.lastName}
               </option>
             ))}
           </select>
