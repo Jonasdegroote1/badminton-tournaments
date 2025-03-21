@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AddPlayerForm from "./AddPlayerForm";
 import PlayerRow from "./PlayerRow";
 import useTournamentStore from "@/lib/tournamentStore";
+import AddPlayerToTournamentForm from "./AddPlayerToTournamentForm";
 import "../../styles/components/playersTable.css";
 
 export default function PlayerTable() {
@@ -11,41 +12,22 @@ export default function PlayerTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddPlayerForm, setShowAddPlayerForm] = useState(false);
-  const [addPlayerSuccess, setAddPlayerSuccess] = useState(false);
+  const [showAddToTournamentForm, setShowAddToTournamentForm] = useState(false);
   const selectedTournament = useTournamentStore((state) => state.selectedTournament);
   const tournamentId = selectedTournament?.id;
 
-  const [tournaments, setTournaments] = useState([]);
+  const handleAddPlayer = () => setShowAddPlayerForm(true);
+  const handleAddPlayerTournament = () => setShowAddToTournamentForm(true);
 
-  // Haal alle toernooien op
-  useEffect(() => {
-    fetch("/api/tournaments")  // Dit is een voorbeeld; pas de route aan zoals nodig
-      .then((res) => res.json())
-      .then((data) => {
-        setTournaments(data);
-      })
-      .catch((err) => {
-        console.error("Fout bij ophalen toernooien:", err);
-        setError("Er is een fout opgetreden bij het ophalen van de toernooien.");
-      });
-  }, []);
-
-  const handleAddPlayer = () => {
-    setShowAddPlayerForm(true);
-  };
-
-  const handleCloseForm = () => {
-    setShowAddPlayerForm(false);
-    setAddPlayerSuccess(false);
-  };
+  const handleCloseForm = () => setShowAddPlayerForm(false);
+  const handleCloseAddToTournament = () => setShowAddToTournamentForm(false);
 
   const handlePlayerAdded = (newPlayer) => {
-    setPlayers((prevPlayers) => [...prevPlayers, newPlayer]);
+    setPlayers((prev) => [...prev, newPlayer]);
   };
 
   useEffect(() => {
-    if (!tournamentId) return; // alleen fetchen als er een tournamentId is
-
+    if (!tournamentId) return;
     setLoading(true);
     setError(null);
 
@@ -55,7 +37,7 @@ export default function PlayerTable() {
         setPlayers(data);
         setLoading(false);
       })
-      .catch((error) => {
+      .catch(() => {
         setError("Fout bij het laden van spelers.");
         setLoading(false);
       });
@@ -67,13 +49,21 @@ export default function PlayerTable() {
   return (
     <>
       <div className="add-player-button-container">
-        <button className="btn btn-primary" onClick={handleAddPlayer}>Speler toevoegen</button>
+        <button className="btn btn-primary" onClick={handleAddPlayer}>Speler aanmaken</button>
+        <button className="btn btn-primary" onClick={handleAddPlayerTournament}>Speler toevoegen aan toernooi</button>
       </div>
 
       {showAddPlayerForm && (
         <AddPlayerForm
-          tournaments={tournaments}
           onClose={handleCloseForm}
+          onPlayerAdded={handlePlayerAdded}
+        />
+      )}
+
+      {showAddToTournamentForm && tournamentId && (
+        <AddPlayerToTournamentForm
+          tournamentId={tournamentId}
+          onClose={handleCloseAddToTournament}
           onPlayerAdded={handlePlayerAdded}
         />
       )}
