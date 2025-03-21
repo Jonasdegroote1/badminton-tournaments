@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Modal from './modal'; // Zorg ervoor dat je de juiste pad hebt voor je Modal component
+import Modal from "../modal"; // Zorg ervoor dat je de juiste pad hebt voor je Modal component
 import "../../styles/components/addTeamForm.css";
 
 export default function AddTeamForm({ tournamentId, onClose }) {
