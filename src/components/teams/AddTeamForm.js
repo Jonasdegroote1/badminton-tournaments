@@ -11,13 +11,15 @@ export default function AddTeamForm({ tournamentId, onClose }) {
   const [strengthId, setStrengthId] = useState(null);
   const [error, setError] = useState('');
 
-  // Haal spelers op
+  // Haal spelers op, met juiste tournamentId
   useEffect(() => {
-    fetch('/api/players')
+    if (!tournamentId) return; // Zorg ervoor dat tournamentId aanwezig is
+    const url = `/api/players?tournamentId=${tournamentId}`;
+    fetch(url)
       .then((res) => res.json())
       .then((data) => setPlayers(data))
       .catch((error) => console.error("Fout bij ophalen spelers:", error));
-  }, []);
+  }, [tournamentId]); // Afhankelijk van tournamentId
 
   // Haal sterktes op
   useEffect(() => {
@@ -33,15 +35,15 @@ export default function AddTeamForm({ tournamentId, onClose }) {
       return;
     }
 
-    // Cast de velden naar nummer (number) type, gebruik parseInt() of Number()
+    // Cast de velden naar nummer (number) type
     const teamData = {
-      player1Id: Number(player1),  // Cast naar number
-      player2Id: Number(player2),  // Cast naar number
-      strengthId: Number(strengthId),  // Cast naar number
-      tournamentId: Number(tournamentId),  // Cast naar number
+      player1Id: Number(player1),
+      player2Id: Number(player2),
+      strengthId: Number(strengthId),
+      tournamentId: Number(tournamentId),
     };
 
-    console.log('Verzonden data:', teamData); // Log de data voor debugging
+    console.log('Verzonden data:', teamData);
 
     fetch('/api/team', {
       method: 'POST',
@@ -52,13 +54,13 @@ export default function AddTeamForm({ tournamentId, onClose }) {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error('Fout bij serveraanroep: ' + res.statusText); // Gooi een error als status niet OK is
+          throw new Error('Fout bij serveraanroep: ' + res.statusText);
         }
         return res.json();
       })
       .then((data) => {
         alert('Team succesvol toegevoegd');
-        onClose();  // Roep de onClose functie aan om het formulier te sluiten
+        onClose();  // Sluit het formulier
       })
       .catch((err) => {
         console.error("Fout bij toevoegen team:", err);
@@ -110,7 +112,6 @@ export default function AddTeamForm({ tournamentId, onClose }) {
 
       <button className="add-team-button" onClick={handleAddTeam}>Voeg Team Toe</button>
 
-      {/* Close Button om het formulier te sluiten */}
       <button className="close-button" onClick={onClose}>Sluit Formulier</button>
     </div>
   );
