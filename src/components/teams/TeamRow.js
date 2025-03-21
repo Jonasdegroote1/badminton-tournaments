@@ -26,7 +26,7 @@ export default function TeamRow({ team }) {
         <p>{team.player1.firstName} {team.player1.lastName}</p>
       </div>
       <div className="team-row_player">
-        <p>{team.player2.firstName} {team.player2.lastName}</p>
+        <p>{team.player2 ? team.player2.firstName: "---"} {team.player2 ? team.player2.lastName: ""}</p>
       </div>
 
       <div className="team-row_poule">
