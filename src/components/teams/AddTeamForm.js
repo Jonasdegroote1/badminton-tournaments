@@ -73,7 +73,7 @@ export default function AddTeamForm({ tournamentId, onClose }) {
       });
   };
 
-  // Filter spelers die niet al aan een team gekoppeld zijn in dit toernooi
+  // Filter spelers die **niet** al aan een team gekoppeld zijn in dit toernooi
   const availablePlayers = players.filter(player => !usedPlayerIds.includes(player.id));
 
   return (
