@@ -1,6 +1,6 @@
 "use client";
-// components/AddPlayerToTournamentForm.js
 import { useEffect, useState } from "react";
+import Modal from "../Modal";
 import "../../styles/components/addPlayerToTournamentForm.css";
 
 export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPlayerAdded }) {
@@ -40,7 +40,7 @@ export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPla
   };
 
   return (
-    <div className="modal-overlay">
+    <Modal onClose={onClose}>
       <div className="modal">
         <h2>Speler toevoegen aan toernooi</h2>
         {error && <p className="error">{error}</p>}
@@ -63,6 +63,6 @@ export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPla
           </div>
         </form>
       </div>
-    </div>
+    </Modal>
   );
 }
