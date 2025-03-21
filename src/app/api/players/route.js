@@ -7,10 +7,13 @@ export async function GET(request) {
   const tournamentId = parseInt(searchParams.get("tournamentId"));
 
   if (isNaN(tournamentId)) {
-    return new Response(JSON.stringify({ error: "Ongeldig tournamentId" }), { 
-      status: 400, 
-      headers: { "Content-Type": "application/json" } 
-    });
+    return new Response(
+      JSON.stringify({ error: "Ongeldig tournamentId" }),
+      { 
+        status: 400, 
+        headers: { "Content-Type": "application/json" } 
+      }
+    );
   }
 
   try {
