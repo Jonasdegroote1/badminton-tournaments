@@ -19,8 +19,8 @@ export default function AddTeamForm({ tournamentId, onClose }) {
       .then((data) => {
         setPlayers(data);
 
-        // Haal een lijst van gebruikte speler-ID's op (alle spelers die aan dit specifieke toernooi gekoppeld zijn)
-        const usedIds = data.filter(player => player.teamId !== null && player.teamId === tournamentId).map(player => player.id);
+        // Haal een lijst van gebruikte speler-ID's op, **alleen in dit specifieke toernooi**
+        const usedIds = data.filter(player => player.teamId === tournamentId).map(player => player.id);
         setUsedPlayerIds(usedIds);
       })
       .catch((error) => console.error("Fout bij ophalen spelers:", error));
