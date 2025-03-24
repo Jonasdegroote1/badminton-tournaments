@@ -69,7 +69,7 @@ export default function TeamsTable() {
       {addTeamSuccess && <p className="success-message">Team succesvol toegevoegd!</p>}
 
       <div className="add-team-button-container">
-        <button className="add-team-button" onClick={handleAddTeam}>
+        <button className="btn btn-primary" onClick={handleAddTeam}>
           Voeg team toe
         </button>
       </div>
