@@ -1,9 +1,27 @@
 .dashboard-container {
   display: flex;
+  min-height: 100vh; /* Volledige viewporthoogte */
+  background-color: #f9f9f9; /* Lichtgrijze achtergrond */
+}
+
+.dashboard-sidebar {
+  width: 240px; /* Of 200px afhankelijk van je voorkeur */
+  background-color: #1e1e2f; /* Donkere sidebar */
+  color: #fff;
+  padding: 20px;
 }
 
 .dashboard-content {
   flex-grow: 1;
-  padding: 20px;
+  padding: 30px;
   overflow-y: auto;
+  background-color: #ffffff; /* Witte content area */
+  border-left: 1px solid #ddd;
+}
+
+/* Optioneel: voor consistentie van de reset */
+.dashboard-content h1,
+.dashboard-content h2,
+.dashboard-content p {
+  margin-bottom: 15px;
 }
