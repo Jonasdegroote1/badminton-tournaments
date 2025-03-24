@@ -22,41 +22,6 @@
   margin-bottom: 10px;
 }
 
-/* Styling voor de knoppen */
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.poule-item button {
-  margin-right: .5rem;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-.edit-btn {
-  background-color: #ffc107;  /* Geel voor bewerken */
-}
-
-.edit-btn:hover {
-  background-color: #e0a800;
-}
-
-.delete-btn {
-  background-color: #dc3545;  /* Rood voor verwijderen */
-}
-
-.delete-btn:hover {
-  background-color: #c82333;
-}
-
 /* Styling voor de teamslijst */
 .team-list {
   list-style-type: none;
