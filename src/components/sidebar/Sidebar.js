@@ -30,7 +30,7 @@ export default function Sidebar() {
       
       <button 
         onClick={() => signOut({ callbackUrl: "/auth/login" })} 
-        className="btn button-logout"
+        className="btn btn-logout"
       >
         Uitloggen
       </button>
