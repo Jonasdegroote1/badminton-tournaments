@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Modal from "../modal";
 import "../../styles/components/addPlayerToTournamentForm.css";
+import "../../styles/components/btn.css"; // centrale button styling
 
 export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPlayerAdded }) {
   const [availablePlayers, setAvailablePlayers] = useState([]);
@@ -57,9 +58,17 @@ export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPla
               </option>
             ))}
           </select>
-          <div className="button-group">
-            <button type="submit" disabled={loading}>Toevoegen</button>
-            <button type="button" onClick={onClose}>Annuleren</button>
+          <div className="button-group modal-buttons">
+            <button type="submit" className="btn btn-primary" disabled={loading}>
+              {loading ? "Toevoegen..." : "Toevoegen"}
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onClose}
+            >
+              Annuleren
+            </button>
           </div>
         </form>
       </div>
