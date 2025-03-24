@@ -1,5 +1,4 @@
 .sidebar {
-  background-color: #1e1e2f; /* donkerblauw/paars tint */
   display: flex;
   flex-direction: column;
   height: 100vh;
