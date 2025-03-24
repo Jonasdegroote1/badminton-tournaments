@@ -1,4 +1,3 @@
-// components/PlayerTable.js
 "use client";
 import { useEffect, useState } from "react";
 import AddPlayerForm from "./AddPlayerForm";
@@ -78,7 +77,7 @@ export default function PlayerTable() {
 
       <div className="player-grid">
         {players.map((player) => (
-          <PlayerRow key={player.id} player={player} />
+          <PlayerRow key={player.id} player={player} tournamentId={tournamentId} />
         ))}
       </div>
     </>
