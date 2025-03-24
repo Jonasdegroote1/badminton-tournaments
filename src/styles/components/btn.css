@@ -45,16 +45,16 @@
 }
 
 /* === Log-out button === */
-.btn-logout {
+.btn-logout, .btn-danger {
   background-color: #d9534f;
   color: white;
 }
 
-.btn-logout:hover {
+.btn-logout:hover, .btn-danger:hover {
   background-color: #c9302c;
 }
 
-.btn-logout:active {
+.btn-logout:active, .btn-danger:active {
   background-color: #ac2925;
 }
 
