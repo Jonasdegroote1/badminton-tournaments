@@ -1,39 +1,50 @@
 .sidebar {
-  width: 20rem;
-  background-color: #f8f9fa;
+  width: 240px; /* iets breder voor ruimte */
+  background-color: #1e1e2f; /* donkerblauw/paars tint */
   padding: 20px;
   display: flex;
   flex-direction: column;
   height: 100vh;
+  color: #fff;
 }
 
 .sidebar-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  color: #ffffff;
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 .sidebar-link {
   text-decoration: none;
-  padding: 10px;
-  color: #333;
-  display: block;
+  padding: 10px 15px;
+  color: #ccc;
+  border-radius: 5px;
+  transition: background 0.3s, color 0.3s;
 }
 
 .sidebar-link:hover {
-  background-color: #ddd;
+  background-color: #333c57;
+  color: #fff;
 }
 
 .add-tournament-btn {
   margin-top: auto;
-  padding: 10px;
+  padding: 12px 15px;
   background-color: #007bff;
   color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background 0.3s;
+}
+
+.add-tournament-btn:hover {
+  background-color: #0056b3;
 }
