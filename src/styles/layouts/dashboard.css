@@ -8,12 +8,12 @@
   width: 16rem; /* Of 200px afhankelijk van je voorkeur */
   background-color: #1e1e2f; /* Donkere sidebar */
   color: #fff;
-  padding: 20px;
+  padding: 1rem;
 }
 
 .dashboard-content {
   flex-grow: 1;
-  padding: 30px;
+  padding: 2rem;
   overflow-y: auto;
   background-color: #ffffff; /* Witte content area */
   border-left: 1px solid #ddd;
@@ -23,5 +23,5 @@
 .dashboard-content h1,
 .dashboard-content h2,
 .dashboard-content p {
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
 }
