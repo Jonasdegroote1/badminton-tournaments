@@ -1,7 +1,6 @@
 "use client";
 
 import "../../styles/components/otherTournaments.css";
-
 import { useState } from "react";
 
 export default function OtherTournaments({ tournaments }) {
@@ -46,7 +45,12 @@ export default function OtherTournaments({ tournaments }) {
         </div>
       ))}
 
-      <button className="add-tournament" onClick={() => setShowModal(true)}>+ Add Tournament</button>
+      <button 
+        className="btn btn-primary add-tournament" 
+        onClick={() => setShowModal(true)}
+      >
+        + Add Tournament
+      </button>
 
       {showModal && (
         <div className="modal">
@@ -80,8 +84,8 @@ export default function OtherTournaments({ tournaments }) {
               </select>
 
               <div className="modal-buttons">
-                <button type="submit">Save</button>
-                <button type="button" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary">Save</button>
+                <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary">Cancel</button>
               </div>
             </form>
           </div>
