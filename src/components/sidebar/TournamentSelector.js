@@ -22,6 +22,13 @@ export default function TournamentSelector() {
       });
   }, []);
 
+  // Functie om de maand en dag te extraheren
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const options = { month: '2-digit', day: '2-digit' }; // Weergave als MM/DD
+    return d.toLocaleDateString('nl-NL', options); // Voor Nederlands formaat
+  };
+
   return (
     <div className="tournament-selector">
       <label className="tournament-label">SELECT TOURNAMENT</label>
@@ -35,7 +42,7 @@ export default function TournamentSelector() {
       >
         {tournaments.map((tournament) => (
           <option key={tournament.id} value={tournament.id}>
-            {tournament.name} {tournament.date} {tournament.session}
+            {tournament.name} {formatDate(tournament.date)} {tournament.session}
           </option>
         ))}
       </select>
