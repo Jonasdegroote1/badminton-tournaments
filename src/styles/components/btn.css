@@ -25,125 +25,125 @@
 }
 
 /* === Primaire button === */
-.button-primary {
+.btn-primary {
   background-color: #007bff;
   color: white;
 }
 
-.button-primary:hover {
+.btn-primary:hover {
   background-color: #0056b3;
 }
 
 /* === Secundaire button === */
-.button-secondary {
+.btn-secondary {
   background-color: #95a5a6;
   color: white;
 }
 
-.button-secondary:hover {
+.btn-secondary:hover {
   background-color: #7f8c8d;
 }
 
 /* === Log-out button === */
-.button-logout {
+.btn-logout {
   background-color: #d9534f;
   color: white;
 }
 
-.button-logout:hover {
+.btn-logout:hover {
   background-color: #c9302c;
 }
 
-.button-logout:active {
+.btn-logout:active {
   background-color: #ac2925;
 }
 
 /* === Add Tournament button === */
-.button-add-tournament {
+.btn-add-tournament {
   background: white;
   color: #007bff;
   border: 2px solid #007bff;
   font-weight: bold;
 }
 
-.button-add-tournament:hover {
+.btn-add-tournament:hover {
   background: #007bff;
   color: white;
 }
 
 /* === Modal buttons === */
-.button-modal-primary {
+.btn-modal-primary {
   background: #007bff;
   color: white;
 }
 
-.button-modal-secondary {
+.btn-modal-secondary {
   background: #ccc;
   color: #333;
 }
 
 /* === Kleine knop (bv. in tables) === */
-.button-small {
+.btn-small {
   padding: 0.25rem 0.5rem;
   font-size: 0.85rem;
 }
 
-.button-small-primary {
+.btn-small-primary {
   background-color: #007bff;
   color: white;
 }
 
-.button-small-primary:hover {
+.btn-small-primary:hover {
   background-color: #0056b3;
 }
 
-.button-small-danger {
+.btn-small-danger {
   background-color: #dc3545;
   color: white;
 }
 
-.button-small-danger:hover {
+.btn-small-danger:hover {
   background-color: #c82333;
 }
 
 /* === Edit button (bijvoorbeeld bij teams of poules) === */
-.button-edit {
+.btn-edit {
   background-color: #ffc107;
   color: #333;
 }
 
-.button-edit:hover {
+.btn-edit:hover {
   background-color: #e0a800;
 }
 
 /* === Delete button === */
-.button-delete {
+.btn-delete {
   background-color: #dc3545;
   color: white;
 }
 
-.button-delete:hover {
+.btn-delete:hover {
   background-color: #c82333;
 }
 
 /* === Add Team button (groen) === */
-.button-add-team {
+.btn-add-team {
   background-color: #4CAF50;
   color: white;
 }
 
-.button-add-team:hover {
+.btn-add-team:hover {
   background-color: #45a049;
 }
 
 /* === Flex-container voor knoppen indien nodig === */
-.button-group {
+.btn-group {
   display: flex;
   gap: 0.5rem;
 }
 
 @media (max-width: 600px) {
-  .button-group {
+  .btn-group {
     flex-direction: column;
   }
 
