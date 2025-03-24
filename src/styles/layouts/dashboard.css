@@ -5,7 +5,7 @@
 }
 
 .dashboard-sidebar {
-  width: 240px; /* Of 200px afhankelijk van je voorkeur */
+  width: 16rem; /* Of 200px afhankelijk van je voorkeur */
   background-color: #1e1e2f; /* Donkere sidebar */
   color: #fff;
   padding: 20px;
