@@ -1,19 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
 import Modal from "../modal";
-import "../../styles/components/AddPlayerForm.css";
+import "../../styles/components/AddPlayerForm.css";  // Behoud eigen form-styling
+import "../../styles/components/btn.css";        // Importeer centrale button-styling
 
 export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = [] }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [clubId, setClubId] = useState("");
-  const [mail, setMail] = useState("");  // Gebruik 'mail' in plaats van 'email'
+  const [mail, setMail] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [clubs, setClubs] = useState([]); // State om clubs op te slaan
+  const [clubs, setClubs] = useState([]);
 
-  // Haal de clubs op van de backend
   useEffect(() => {
     const fetchClubs = async () => {
       try {
@@ -22,7 +22,7 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
           throw new Error("Fout bij het ophalen van clubs.");
         }
         const data = await response.json();
-        setClubs(data); // Zet de clubs in de state
+        setClubs(data);
       } catch (error) {
         setError(error.message || "Er is een fout opgetreden.");
       }
@@ -31,7 +31,6 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
     fetchClubs();
   }, []);
 
-  // Functie om de speler toe te voegen
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -42,19 +41,8 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
 
     setLoading(true);
     setError(null);
-
-    // Zet de clubId om naar een integer voordat je deze verzendt
     const parsedClubId = parseInt(clubId, 10);
 
-    console.log("Verzonden data:", {
-      firstName,
-      lastName,
-      clubId: parsedClubId,
-      mail,
-      phone,
-    });
-
-    // Verstuur de speler naar de backend
     try {
       const response = await fetch("/api/players", {
         method: "POST",
@@ -64,8 +52,8 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
         body: JSON.stringify({
           firstName,
           lastName,
-          clubId: parsedClubId,  // Gebruik de integer versie van clubId
-          mail,  // Gebruik mail in plaats van email
+          clubId: parsedClubId,
+          mail,
           phone,
         }),
       });
@@ -75,8 +63,8 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
       }
 
       const newPlayer = await response.json();
-      onPlayerAdded(newPlayer);  // Callback om speler toe te voegen aan de lijst
-      onClose();  // Sluit het formulier na succesvolle toevoeging
+      onPlayerAdded(newPlayer);
+      onClose();
     } catch (error) {
       setError(error.message || "Er is een fout opgetreden.");
     } finally {
@@ -127,7 +115,7 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
           </div>
 
           <div className="form-group">
-            <label>Mail</label> {/* Verander van E-mail naar Mail */}
+            <label>Mail</label>
             <input
               type="email"
               value={mail}
@@ -146,7 +134,7 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
             />
           </div>
 
-          <div className="form-actions">
+          <div className="form-actions modal-buttons">
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? "Toevoegen..." : "Speler toevoegen"}
             </button>
