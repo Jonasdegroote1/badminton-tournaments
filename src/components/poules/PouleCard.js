@@ -5,7 +5,7 @@ import TeamItem from "./TeamItem";
 import TeamSelectionModal from "./TeamSelectionModal"; 
 import "../../styles/components/pouleCard.css";
 
-export default function PouleCard({ data, onDelete, onRemoveTeam, handleAddTeamToPoule }) {
+export default function PouleCard({ data, onDelete, onRemoveTeam, handleAddTeamToPoule, onEdit }) {
   const [isModalOpen, setIsModalOpen] = useState(false); 
 
   const handleDelete = () => {
@@ -32,12 +32,12 @@ export default function PouleCard({ data, onDelete, onRemoveTeam, handleAddTeamT
           <span className="poule-strength">{data.strength?.name || "Onbekend"}</span>
         </div>
         <div className="poule-item-actions">
-          <button className="edit-btn" onClick={() => onEdit(data.id)}>Bewerken</button>
-          <button className="delete-btn" onClick={handleDelete}>Verwijderen</button>
+          <button className="btn btn-small btn-primary" onClick={() => onEdit(data.id)}>Bewerken</button>
+          <button className="btn btn-small btn-danger" onClick={handleDelete}>Verwijderen</button>
         </div>
       </div>
       <TeamItem data={data.teams || []} onRemove={(teamId) => onRemoveTeam(teamId, data.id)} />
-      <button className="add-team-btn" onClick={handleAddTeamClick}>Voeg team toe</button>
+      <button className="btn btn-primary add-team-btn" onClick={handleAddTeamClick}>Voeg team toe</button>
 
       <TeamSelectionModal
         isOpen={isModalOpen}
