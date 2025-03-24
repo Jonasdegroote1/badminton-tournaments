@@ -19,18 +19,21 @@ export default function Sidebar() {
         <NavItem icon="👥" label="Teams" href="/dashboard/teams" />
         <NavItem icon="🏆" label="Matches" href="/dashboard/matches" />
         <NavItem icon="📅" label="Schedule" href="/dashboard/schedule" />
-        <NavItem icon="📊" label="Results" href="/dashboard/results"/>
+        <NavItem icon="📊" label="Results" href="/dashboard/results" />
       </nav>
 
       <OtherTournaments 
-        tournaments={[
+        tournaments={[ 
           { name: "Afternoon Championship", time: "14:00 - 18:00" },
         ]}
       />
+      
       <button 
-          onClick={() => signOut({ callbackUrl: "/auth/login" })} 
-          className="btn btn-log-out"
-        >uitloggen</button>
+        onClick={() => signOut({ callbackUrl: "/auth/login" })} 
+        className="btn btn-log-out"
+      >
+        Uitloggen
+      </button>
     </aside>
   );
 }
