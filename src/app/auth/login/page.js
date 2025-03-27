@@ -1,5 +1,3 @@
-// app/auth/login/page.js
-
 "use client";
 
 import { useState } from "react";
@@ -33,13 +31,29 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Wachtwoord" required />
-        <button type="submit" disabled={loading}>{loading ? "Inloggen..." : "Login"}</button>
-      </form>
+    <div className="login-container">
+      <div className="login-box">
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <input 
+            type="email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            placeholder="Email" 
+            required 
+          />
+          <input 
+            type="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            placeholder="Wachtwoord" 
+            required 
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? "Inloggen..." : "Login"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
