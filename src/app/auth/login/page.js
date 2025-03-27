@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import "@/styles/auth/login.css";
+import "../../styles/auth/login.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
