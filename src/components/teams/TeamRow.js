@@ -3,22 +3,21 @@ import "../../styles/components/teamRow.css";
 export default function TeamRow({ team }) {
 
   const onDeleteTeam = () => {
-  if (confirm(`Weet je zeker dat je team van ${team.player1.firstName} & ${ team.player2 ? team.player2.firstName: "" } wilt verwijderen?`)) {
-    // Gebruik de queryparameter teamId in de URL
-    fetch(`/api/team?teamId=${team.id}`, {
-      method: 'DELETE',
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Verwijderen mislukt");
-        alert("Team succesvol verwijderd");
+    if (confirm(`Weet je zeker dat je team van ${team.player1.firstName} & ${team.player2 ? team.player2.firstName : ""} wilt verwijderen?`)) {
+      // Gebruik de queryparameter teamId in de URL
+      fetch(`/api/team?teamId=${team.id}`, {
+        method: 'DELETE',
       })
-      .catch((err) => {
-        console.error("Fout bij verwijderen team:", err);
-        alert("Fout bij het verwijderen van het team.");
-      });
-  }
-};
-
+        .then((res) => {
+          if (!res.ok) throw new Error("Verwijderen mislukt");
+          alert("Team succesvol verwijderd");
+        })
+        .catch((err) => {
+          console.error("Fout bij verwijderen team:", err);
+          alert("Fout bij het verwijderen van het team.");
+        });
+    }
+  };
 
   return (
     <div className="team-grid team-row">
@@ -26,7 +25,7 @@ export default function TeamRow({ team }) {
         <p>{team.player1.firstName} {team.player1.lastName}</p>
       </div>
       <div className="team-row_player">
-        <p>{team.player2 ? team.player2.firstName: "---"} {team.player2 ? team.player2.lastName: ""}</p>
+        <p>{team.player2 ? team.player2.firstName : "---"} {team.player2 ? team.player2.lastName : ""}</p>
       </div>
 
       <div className="team-row_poule">
@@ -38,8 +37,8 @@ export default function TeamRow({ team }) {
       </div>
 
       <div className="team-row_actions">
-        <button>Wijzigen</button>
-        <button onClick={onDeleteTeam}>Verwijderen</button>
+        <button className="btn">Wijzigen</button>
+        <button className="btn btn-danger" onClick={onDeleteTeam}>Verwijderen</button>
       </div>
     </div>
   );

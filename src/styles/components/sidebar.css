@@ -1,7 +1,4 @@
 .sidebar {
-  width: 240px; /* iets breder voor ruimte */
-  background-color: #1e1e2f; /* donkerblauw/paars tint */
-  padding: 20px;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -32,17 +29,6 @@
 .sidebar-link:hover {
   background-color: #333c57;
   color: #fff;
-}
-
-.add-tournament-btn {
-  margin-top: auto;
-  padding: 12px 15px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
 }
 
 .add-tournament-btn:hover {

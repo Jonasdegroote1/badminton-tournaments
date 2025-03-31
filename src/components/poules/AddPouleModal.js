@@ -101,11 +101,11 @@ export default function AddPouleModal({ showModal, setShowModal, tournamentId, o
               </select>
             </div>
 
-            <div>
-              <button type="button" onClick={handleAddPoule}>
+            <div className="button-group">
+              <button type="button" className="btn btn-primary" onClick={handleAddPoule}>
                 Voeg Poule toe
               </button>
-              <button type="button" onClick={() => setShowModal(false)}>
+              <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
                 Annuleer
               </button>
             </div>

@@ -1,3 +1,5 @@
+// app/api/auth/register/route.js
+
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
@@ -12,7 +14,7 @@ export async function POST(req) {
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
-    return new Response(JSON.stringify({ message: "Gebruiker bestaat al" }), { status: 400 });
+    return new Response(JSON.stringify({ message: "Gebruiker bestaat al" }), { status: 409 });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -20,5 +22,5 @@ export async function POST(req) {
     data: { email, password: hashedPassword, firstName, lastName, roleId: 1 },
   });
 
-  return new Response(JSON.stringify(user), { status: 201 });
+  return new Response(JSON.stringify({ id: user.id, email: user.email }), { status: 201 });
 }

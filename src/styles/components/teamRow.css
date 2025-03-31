@@ -39,26 +39,3 @@
   display: flex;
   gap: 0.5rem;
 }
-
-.team-row_actions button {
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  padding: 0.4rem 0.75rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: background-color 0.2s ease;
-}
-
-.team-row_actions button:hover {
-  background-color: #2563eb;
-}
-
-.team-row_actions button:last-child {
-  background-color: #ef4444;
-}
-
-.team-row_actions button:last-child:hover {
-  background-color: #dc2626;
-}

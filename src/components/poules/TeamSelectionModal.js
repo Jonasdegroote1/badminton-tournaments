@@ -90,8 +90,19 @@ export default function TeamSelectionModal({ isOpen, onClose, pouleId, strengthI
               </select>
             </form>
           )}
-          <button onClick={handleAdd} disabled={!selectedTeam}>Voeg team toe</button>
-          <button onClick={onClose}>Annuleren</button>
+          <button 
+            onClick={handleAdd} 
+            disabled={!selectedTeam} 
+            className="btn btn-primary" // Toevoegen van styling voor de 'Voeg team toe' knop
+          >
+            Voeg team toe
+          </button>
+          <button 
+            onClick={onClose} 
+            className="btn btn-secondary" // Toevoegen van styling voor de 'Annuleren' knop
+          >
+            Annuleren
+          </button>
         </div>
       </div>
     )

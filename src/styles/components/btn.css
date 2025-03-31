@@ -1,22 +1,154 @@
-/* styles/components/button.css */
-
-.btn-log-out {
-  background-color: #d9534f; /* Red background for logout */
-  color: white; /* White text color */
-  padding: 10px 20px; /* Padding around the button */
-  border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
-  font-size: 16px; /* Font size */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease; /* Smooth transition on hover */
-  margin-top: 1rem;
+/* === Algemene basisstijl voor alle knoppen === */
+.button,
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  text-align: center;
 }
 
-.btn-log-out:hover {
+/* Hover en focus effecten */
+.button:hover,
+.btn:hover {
+  opacity: 0.9;
+}
+
+.button:focus,
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* === Primaire button === */
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* === Secundaire button === */
+.btn-secondary {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #7f8c8d;
+}
+
+/* === Log-out button === */
+.btn-logout, .btn-danger {
+  background-color: #d9534f;
+  color: white;
+}
+
+.btn-logout:hover, .btn-danger:hover {
   background-color: #c9302c;
-   /* Darker red when hovering */
 }
 
-.btn-log-out:active {
-  background-color: #ac2925; /* Even darker red when clicked */
+.btn-logout:active, .btn-danger:active {
+  background-color: #ac2925;
+}
+
+/* === Add Tournament button === */
+.btn-add-tournament {
+  background: white;
+  color: #007bff;
+  border: 2px solid #007bff;
+  font-weight: bold;
+}
+
+.btn-add-tournament:hover {
+  background: #007bff;
+  color: white;
+}
+
+/* === Modal buttons === */
+.btn-modal-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-modal-secondary {
+  background: #ccc;
+  color: #333;
+}
+
+/* === Kleine knop (bv. in tables) === */
+.btn-small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+.btn-small-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-small-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-small-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-small-danger:hover {
+  background-color: #c82333;
+}
+
+/* === Edit button (bijvoorbeeld bij teams of poules) === */
+.btn-edit {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.btn-edit:hover {
+  background-color: #e0a800;
+}
+
+/* === Delete button === */
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+/* === Add Team button (groen) === */
+.btn-add-team {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-add-team:hover {
+  background-color: #45a049;
+}
+
+/* === Flex-container voor knoppen indien nodig === */
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .btn-group {
+    flex-direction: column;
+  }
+
+  .button,
+  .btn {
+    width: 100%;
+  }
 }

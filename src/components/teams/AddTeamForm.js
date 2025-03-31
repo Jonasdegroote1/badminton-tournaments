@@ -120,9 +120,9 @@ export default function AddTeamForm({ tournamentId, onClose }) {
           </select>
         </div>
 
-        <button className="add-team-button" onClick={handleAddTeam}>Voeg Team Toe</button>
+        <button className="btn add-team-button" onClick={handleAddTeam}>Voeg Team Toe</button>
 
-        <button className="close-button" onClick={onClose}>Sluit Formulier</button>
+        <button className="btn close-button" onClick={onClose}>Sluit Formulier</button>
       </div>
     </Modal>
   );

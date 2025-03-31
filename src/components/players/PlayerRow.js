@@ -23,8 +23,10 @@ export default function PlayerRow({ player, tournamentId }) {
       <p>{player.mail}</p>
       <p>{player.phone}</p>
       <div className="player-row-actions">
-        <button className="btn btn-small">edit</button>
-        <button className="btn btn-small btn-delete" onClick={teamDelete}>delete</button>
+        <button className="btn btn-small btn-primary">edit</button>
+        <button className="btn btn-small btn-delete" onClick={teamDelete}>
+          delete
+        </button>
       </div>
     </div>
   );

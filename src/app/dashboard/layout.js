@@ -1,7 +1,14 @@
+// app/dashboard/layout.js
+
 import Sidebar from "@/components/sidebar/Sidebar";
 import "../../styles/reset.css";
 import "../../styles/layouts/dashboard.css";
 import "../../styles/components/btn.css";
+
+export const metadata = {
+  title: "Dashboard",
+  description: "Admin Dashboard",
+};
 
 export default function DashboardLayout({ children }) {
   return (
@@ -10,7 +17,7 @@ export default function DashboardLayout({ children }) {
         <Sidebar />
       </aside>
       <main className="dashboard-content">
-        {children} {/* Hier wordt de inhoud van page.js geplaatst */}
+        {children}
       </main>
     </div>
   );

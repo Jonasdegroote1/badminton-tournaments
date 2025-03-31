@@ -1,28 +1,14 @@
-"use client";
+// app/dashboard/page.js
 
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import CourtUpdateForm from "@/components/CourtUpdateForm";
-import useTournamentStore from "../../lib/tournamentStore"; // Zustand-store
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 
-export default function Dashboard() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const { selectedTournament } = useTournamentStore(); // Haal geselecteerd toernooi op
+export default async function DashboardPage() {
+  const session = await getServerSession(authOptions);
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.replace("/auth/login");
-    }
-  }, [status, router]);
-
-  if (status === "loading") {
-    return <p>Bezig met laden...</p>;
-  }
-
-  if (!session) {
-    return null;
+  if (!session || session.user.roleId !== 1) {
+    redirect("/auth/login");
   }
 
   return (
@@ -31,24 +17,7 @@ export default function Dashboard() {
       <p>Welkom, <strong>{session.user.firstName}</strong>! 🎉</p>
       <p>Rol: <span>{session.user.roleId === 1 ? "Admin" : "Gebruiker"}</span></p>
 
-      {selectedTournament ? (
-        <div>
-          <h2>Geselecteerd Toernooi</h2>
-          <p><strong>Name:</strong> {selectedTournament.name}</p>
-          <p><strong>Date:</strong> {selectedTournament.date}</p>
-          <p><strong>Session:</strong> {selectedTournament.session || "No session data"}</p>
-        </div>
-      ) : (
-        <p>Geen toernooi geselecteerd...</p>
-      )}
-
-      <div>
-        <button onClick={() => router.push("/app/dashboard")}>Ga naar Dashboard</button>
-
-        <div>
-          <CourtUpdateForm />
-        </div>
-      </div>
+      <p>Hier komt jouw admin-only content...</p>
     </div>
   );
 }
