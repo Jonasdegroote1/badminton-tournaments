@@ -1,21 +1,32 @@
 const { prisma } = require("@/lib/prisma");
 
-export async function GET(request) {
-  console.log("API request received");
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const pouleId = searchParams.get("pouleId");
 
   try {
-    const matches = await prisma.match.findMany();
-    console.log("Matches fetched from database:", matches);
-
-    return new Response(JSON.stringify(matches), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
+    const matches = await prisma.match.findMany({
+      where: {
+        pouleId: parseInt(pouleId), // Zorg ervoor dat de pouleId goed wordt gefilterd
+      },
+      include: {
+        teams: {
+          include: {
+            team: {
+              include:{
+                player1: true,
+                player2: true,
+              }
+            }
+          },
+        },
+      },
     });
+
+    return new Response(JSON.stringify(matches), { status: 200 });
   } catch (error) {
     console.error("Error fetching matches:", error);
-    return new Response(JSON.stringify({ error: "Error fetching matches" }), {
-      status: 500,
-    });
+    return new Response(JSON.stringify({ error: "Failed to fetch matches" }), { status: 500 });
   }
 }
 

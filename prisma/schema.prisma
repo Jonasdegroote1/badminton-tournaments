@@ -118,10 +118,10 @@ model Match {
   pouleId      Int
   tournamentId Int
   status       String
-  courtId      Int
+  courtId      Int?     // courtId is nu optioneel
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  court        Court    @relation(fields: [courtId], references: [id])
+  court        Court?   @relation(fields: [courtId], references: [id]) // De relatie met Court is ook optioneel
   poule        Poule    @relation(fields: [pouleId], references: [id])
   setResults   SetResult[] // Geen onDelete hier
   teams        TeamsInMatch[] // Geen onDelete hier
