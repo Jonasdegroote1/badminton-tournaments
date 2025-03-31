@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MatchCard from "./MatchCard";
-// import "../../styles/components/PouleSection.css"; // Zorg ervoor dat de CSS-bestand ook correct is aangepast
+import "../../styles/components/PouleSection.css"; // Zorg ervoor dat de CSS-bestand ook correct is aangepast
 
 const PouleSection = ({ poule }) => {
   const [matches, setMatches] = useState([]);
