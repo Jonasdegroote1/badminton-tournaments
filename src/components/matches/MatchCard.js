@@ -4,9 +4,11 @@ import "../../styles/components/MatchCard.css";
 const MatchCard = ({ match, index }) => {
   return (
     <div className="match-card">
-      <h3>Match {index + 1}</h3>
-      <p>Status: {match.status}</p>
-      <p>Court: {match.courtId}</p>
+      <div className="match-info">
+        <h3>Match {index + 1}</h3>
+        <p>Status: {match.status}</p>
+        <p>Court: {match.courtId}</p>
+      </div>
       <div className="teams">
         {match.teams.length === 2 ? (
           <p>
