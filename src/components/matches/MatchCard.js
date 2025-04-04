@@ -2,6 +2,11 @@ import React from "react";
 import "../../styles/components/MatchCard.css";
 
 const MatchCard = ({ match, index }) => {
+  const formatTeam = (team) => {
+    const { player1, player2 } = team;
+    return `${player1.firstName} ${player1.lastName} & ${player2.firstName} ${player2.lastName}`;
+  };
+
   return (
     <div className="match-card">
       <div className="match-info">
@@ -11,17 +16,11 @@ const MatchCard = ({ match, index }) => {
       </div>
       <div className="teams">
         {match.teams.length === 2 ? (
-          <p>
-            {match.teams[0].team.player1.firstName} {match.teams[0].team.player1.lastName} & 
-            {match.teams[0].team.player2.firstName} {match.teams[0].team.player2.lastName} 
-          </p>
-          <p> 
-            🆚
-          </p>
-          <p>
-            {match.teams[1].team.player1.firstName} {match.teams[1].team.player1.lastName} & 
-            {match.teams[1].team.player2.firstName} {match.teams[1].team.player2.lastName}
-          </p>
+          <>
+            <p>{formatTeam(match.teams[0].team)}</p>
+            <p>🆚</p>
+            <p>{formatTeam(match.teams[1].team)}</p>
+          </>
         ) : (
           <p>Teams nog niet beschikbaar</p>
         )}
