@@ -14,7 +14,11 @@ const MatchCard = ({ match, index }) => {
           <p>
             {match.teams[0].team.player1.firstName} {match.teams[0].team.player1.lastName} & 
             {match.teams[0].team.player2.firstName} {match.teams[0].team.player2.lastName} 
-            🆚 
+          </p>
+          <p> 
+            🆚
+          </p>
+          <p>
             {match.teams[1].team.player1.firstName} {match.teams[1].team.player1.lastName} & 
             {match.teams[1].team.player2.firstName} {match.teams[1].team.player2.lastName}
           </p>
