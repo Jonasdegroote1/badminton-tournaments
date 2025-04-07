@@ -3,22 +3,20 @@ import { authOptions } from "../auth/[...nextauth]/route";
 
 const { prisma } = require("@/lib/prisma");
 
-export async function GET(req, res) {
-  try{
-    const results = await prisma.setResult.findMany();
-    console.log('Results in API:', results);
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const matchId = searchParams.get("matchId");
 
-    return new Response(JSON.stringify(results), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+  if (!matchId) {
+    return NextResponse.json({ error: "matchId is vereist" }, { status: 400 });
   }
-  catch(error){
-    console.error('Error fetching results:', error);
-    return new Response(JSON.stringify({ error: 'Error fetching results' }), {
-      status: 500,
-    });
-  }
+
+  const sets = await prisma.setResult.findMany({
+    where: { matchId: parseInt(matchId) },
+    orderBy: { setNumber: "asc" },
+  });
+
+  return NextResponse.json(sets);
 }
 
 export async function POST(req) {

@@ -44,17 +44,19 @@ const MatchCard = ({ match, index }) => {
         </div>
       )}
 
-      {/* Knop om het formulier te tonen */}
-      <button
-        className="add-set-btn"
-        onClick={() => setFormVisible((prev) => !prev)}
-      >
-        {isFormVisible ? "Annuleer" : "Set scores toevoegen"}
-      </button>
+      {match.setResults?.length === 0 && (
+        <>
+          <button
+            className="add-set-btn"
+            onClick={() => setFormVisible((prev) => !prev)}
+            >
+            {isFormVisible ? "Annuleer" : "Set scores toevoegen"}
+          </button>
 
-      {/* Formulier voor het toevoegen van set scores */}
-      {isFormVisible && <ScoreForm matchId={match.id} />}
-    </div>
+          {isFormVisible && <ScoreForm matchId={match.id} />}
+        </>
+      )}
+</div>
   );
 };
 
