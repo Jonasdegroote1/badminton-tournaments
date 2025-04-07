@@ -20,6 +20,7 @@ export async function GET(req) {
             }
           },
         },
+        setResults: true,
       },
     });
 

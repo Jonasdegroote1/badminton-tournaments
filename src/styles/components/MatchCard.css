@@ -35,3 +35,34 @@
   font-weight: bold;
   font-size: 1.2rem;
 }
+
+.set-results h4 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.set-cards {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  & p {
+    font-size: 0.9em;
+    color: #555;
+    flex: 1;
+    margin: 0;
+  }
+
+}
+
+.set-card {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  width: 120px; /* Pas de breedte aan als dat nodig is */
+  text-align: center;
+  font-size: 1em;
+}
+
