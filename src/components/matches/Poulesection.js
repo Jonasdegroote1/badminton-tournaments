@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import MatchCard from "./MatchCard";
-import "../../styles/components/PouleSection.css"; // Zorg ervoor dat de CSS-bestand ook correct is aangepast
+import "../../styles/components/PouleSection.css";
 
 const PouleSection = ({ poule }) => {
   const [matches, setMatches] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const contentRef = useRef(null);
 
   const fetchMatches = async () => {
-  try {
-    const response = await fetch(`/api/matches?pouleId=${poule.id}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch matches");
+    try {
+      const response = await fetch(`/api/matches?pouleId=${poule.id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch matches");
+      }
+      const data = await response.json();
+      setMatches(data);
+    } catch (error) {
+      console.error("Error fetching matches:", error);
     }
-    const data = await response.json();
-    setMatches(data); // ✅ Zet opgehaalde matches in de state
-  } catch (error) {
-    console.error("Error fetching matches:", error);
-  }
-};
-
+  };
 
   const handleGenerateMatches = async () => {
     try {
@@ -33,45 +34,51 @@ const PouleSection = ({ poule }) => {
         throw new Error("Failed to generate matches");
       }
 
-      await fetchMatches(); // ✅ Na genereren direct opnieuw ophalen
-
+      await fetchMatches();
     } catch (error) {
       console.error("Error generating matches:", error);
     }
   };
 
-
   useEffect(() => {
-    const fetchMatches = async () => {
-      try {
-        const response = await fetch(`/api/matches?pouleId=${poule.id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch matches");
-        }
-        const data = await response.json();
-        setMatches(data);
-      } catch (error) {
-        console.error("Error fetching matches:", error);
-      }
-    };
+    if (isOpen) {
+      fetchMatches();
+    }
+  }, [poule.id, isOpen]);
 
-    fetchMatches();
-  }, [poule.id]);
-
-  console.log("Poule:", poule);
+  const toggleOpen = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <div className="poule-section">
-      <h2 className="poule-title">{poule.name}</h2>
-      <button className="create-match-button" onClick={handleGenerateMatches}>+ create matches</button>
-      <div className="matches-list">
-        {matches.length > 0 ? (
-          matches.map((match, index) => (
-            <MatchCard key={match.id} match={match} index={index} />
-          ))
-        ) : (
-          <p>No matches generated yet.</p>
-        )}
+      <div className="poule-header" onClick={toggleOpen}>
+        <h2 className="poule-title">{poule.name}</h2>
+        <h3>{poule.strength.name}</h3>
+        <button className={`toggle-button ${isOpen ? "open" : ""}`}>
+          {isOpen ? "▲ Close" : "▼ Open"}
+        </button>
+      </div>
+
+      <div
+        className={`poule-content ${isOpen ? "open" : "closed"}`}
+        ref={contentRef}
+        style={{
+          maxHeight: isOpen ? `${contentRef.current?.scrollHeight}px` : "0px",
+        }}
+      >
+        <button className="create-match-button" onClick={handleGenerateMatches}>
+          + create matches
+        </button>
+        <div className="matches-list">
+          {matches.length > 0 ? (
+            matches.map((match, index) => (
+              <MatchCard key={match.id} match={match} index={index} />
+            ))
+          ) : (
+            <p>No matches generated yet.</p>
+          )}
+        </div>
       </div>
     </div>
   );
