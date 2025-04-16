@@ -15,7 +15,7 @@ const MatchCard = ({ match, index }) => {
     if (!window.confirm("Weet je zeker dat je deze set wilt verwijderen?")) return;
 
     try {
-      const response = await fetch("/api/setResult", {
+      const response = await fetch("/api/set-results", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
