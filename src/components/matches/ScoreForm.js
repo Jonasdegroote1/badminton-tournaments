@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import "../../styles/components/ScoreForm.css";
 
-const ScoreForm = ({ matchId }) => {
+const ScoreForm = ({ matchId, onSetAdded }) => {
   const [setScores, setSetScores] = useState([
     { team1Score: "", team2Score: "" },
     { team1Score: "", team2Score: "" },
@@ -18,18 +18,15 @@ const ScoreForm = ({ matchId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Verwijder lege sets voor verzending
     const validSets = setScores.filter(
       (set) => set.team1Score !== "" && set.team2Score !== ""
     );
 
-    // ✅ Validatie: controleer of het aantal ingevulde sets tussen de 2 en 3 ligt
     if (validSets.length < 2 || validSets.length > 3) {
       alert("Er moeten tussen de 2 en 3 sets ingevuld worden.");
       return;
     }
 
-    // ✅ Validatie: controleer of er geen negatieve scores zijn
     const invalidScores = validSets.some(
       (r) => r.team1Score < 0 || r.team2Score < 0
     );
@@ -62,7 +59,12 @@ const ScoreForm = ({ matchId }) => {
       console.log("Score opgeslagen:", data);
       alert("Score succesvol opgeslagen!");
 
-      // ✅ Formulier resetten
+      // 🔥 Informeer ouder component dat er sets zijn toegevoegd
+      if (onSetAdded) {
+        onSetAdded(data); // 'data' moet een array van de nieuw toegevoegde sets zijn
+      }
+
+      // Reset form
       setSetScores([
         { team1Score: "", team2Score: "" },
         { team1Score: "", team2Score: "" },
