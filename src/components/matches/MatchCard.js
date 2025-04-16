@@ -24,16 +24,26 @@ const MatchCard = ({ match, index }) => {
       });
 
       if (response.ok) {
-        // Update de setResults state zonder reload
+        // ✅ Verwijder set uit de lokale state
         setSetResults((prevResults) => prevResults.filter((set) => set.id !== setId));
       } else {
-        const data = await response.json();
-        alert("Verwijderen mislukt: " + data.error);
+        // ⛔️ Veilige parsing van eventuele foutmelding
+        let errorMessage = "Verwijderen mislukt.";
+        if (response.headers.get("Content-Type")?.includes("application/json")) {
+          const data = await response.json();
+          errorMessage = data.error || errorMessage;
+        }
+        alert(errorMessage);
       }
     } catch (error) {
       console.error("Fout bij verwijderen:", error);
       alert("Er ging iets mis bij het verwijderen.");
     }
+  };
+
+  const handleSetAdded = (newSets) => {
+    setSetResults((prev) => [...prev, ...newSets]);
+    setFormVisible(false); // Formulier sluiten na toevoegen
   };
 
   return (
@@ -69,7 +79,7 @@ const MatchCard = ({ match, index }) => {
                   className="delete-set-btn"
                   onClick={() => handleDeleteSet(set.id)}
                 >
-                  ❌
+                  ❌ Verwijder
                 </button>
               </div>
             ))}
@@ -84,7 +94,9 @@ const MatchCard = ({ match, index }) => {
             {isFormVisible ? "Annuleer" : "Set scores toevoegen"}
           </button>
 
-          {isFormVisible && <ScoreForm matchId={match.id} />}
+          {isFormVisible && (
+            <ScoreForm matchId={match.id} onSetAdded={handleSetAdded} />
+          )}
         </>
       )}
     </div>
