@@ -20,11 +20,11 @@ const MatchCard = ({ match, index }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: setId }),
+        body: JSON.stringify({ id: setId }), // Verzendt de setId naar de API
       });
 
       if (response.ok) {
-        // ✅ Verwijder set uit de lokale state
+        // ✅ Verwijder de set uit de lokale state
         setSetResults((prevResults) => prevResults.filter((set) => set.id !== setId));
       } else {
         // ⛔️ Veilige parsing van eventuele foutmelding
@@ -71,7 +71,7 @@ const MatchCard = ({ match, index }) => {
           <h4>Set scores:</h4>
           <div className="set-cards">
             {setResults.map((set, idx) => (
-              <div key={set.id} className="set-card">
+              <div key={set.id} id={set.id} className="set-card"> {/* id toegevoegd voor elke set */}
                 <p>
                   Set {set.setNumber}: {set.team1Score} - {set.team2Score}
                 </p>
