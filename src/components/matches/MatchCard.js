@@ -4,6 +4,7 @@ import ScoreForm from "@/components/matches/ScoreForm";
 
 const MatchCard = ({ match, index }) => {
   const [isFormVisible, setFormVisible] = useState(false);
+  const [setResults, setSetResults] = useState(match.setResults || []);
 
   const formatTeam = (team) => {
     const { player1, player2 } = team;
@@ -23,8 +24,8 @@ const MatchCard = ({ match, index }) => {
       });
 
       if (response.ok) {
-        // Simpelste manier om te herladen
-        location.reload();
+        // Update de setResults state zonder reload
+        setSetResults((prevResults) => prevResults.filter((set) => set.id !== setId));
       } else {
         const data = await response.json();
         alert("Verwijderen mislukt: " + data.error);
@@ -55,12 +56,12 @@ const MatchCard = ({ match, index }) => {
         )}
       </div>
 
-      {match.setResults?.length > 0 && (
+      {setResults.length > 0 ? (
         <div className="set-results">
           <h4>Set scores:</h4>
           <div className="set-cards">
-            {match.setResults.map((set, idx) => (
-              <div key={idx} className="set-card">
+            {setResults.map((set, idx) => (
+              <div key={set.id} className="set-card">
                 <p>
                   Set {set.setNumber}: {set.team1Score} - {set.team2Score}
                 </p>
@@ -74,9 +75,7 @@ const MatchCard = ({ match, index }) => {
             ))}
           </div>
         </div>
-      )}
-
-      {match.setResults?.length === 0 && (
+      ) : (
         <>
           <button
             className="add-set-btn"
