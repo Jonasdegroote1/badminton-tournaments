@@ -1,13 +1,49 @@
 import React, { useState } from "react";
 import "../../styles/components/MatchCard.css";
-import ScoreForm from "@/components/matches/ScoreForm"; // Importeren van het ScoreForm component
+import ScoreForm from "@/components/matches/ScoreForm";
 
 const MatchCard = ({ match, index }) => {
-  const [isFormVisible, setFormVisible] = useState(false); // State voor het zichtbaar maken van het formulier
+  const [isFormVisible, setFormVisible] = useState(false);
+  const [setResults, setSetResults] = useState(match.setResults || []);
 
   const formatTeam = (team) => {
     const { player1, player2 } = team;
     return `${player1.firstName} ${player1.lastName} & ${player2.firstName} ${player2.lastName}`;
+  };
+
+  const handleDeleteSet = async (setId) => {
+    if (!window.confirm("Weet je zeker dat je deze set wilt verwijderen?")) return;
+
+    try {
+      const response = await fetch("/api/set-results", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: setId }), // Verzendt de setId naar de API
+      });
+
+      if (response.ok) {
+        // ✅ Verwijder de set uit de lokale state
+        setSetResults((prevResults) => prevResults.filter((set) => set.id !== setId));
+      } else {
+        // ⛔️ Veilige parsing van eventuele foutmelding
+        let errorMessage = "Verwijderen mislukt.";
+        if (response.headers.get("Content-Type")?.includes("application/json")) {
+          const data = await response.json();
+          errorMessage = data.error || errorMessage;
+        }
+        alert(errorMessage);
+      }
+    } catch (error) {
+      console.error("Fout bij verwijderen:", error);
+      alert("Er ging iets mis bij het verwijderen.");
+    }
+  };
+
+  const handleSetAdded = (newSets) => {
+    setSetResults((prev) => [...prev, ...newSets]);
+    setFormVisible(false); // Formulier sluiten na toevoegen
   };
 
   return (
@@ -30,33 +66,40 @@ const MatchCard = ({ match, index }) => {
         )}
       </div>
 
-      {/* ✅ Hier tonen we de scores */}
-      {match.setResults?.length > 0 && (
+      {setResults.length > 0 ? (
         <div className="set-results">
           <h4>Set scores:</h4>
           <div className="set-cards">
-            {match.setResults.map((set, idx) => (
-              <div key={idx} className="set-card">
-                <p>Set {set.setNumber}: {set.team1Score} - {set.team2Score}</p>
+            {setResults.map((set, idx) => (
+              <div key={set.id} id={set.id} className="set-card"> {/* id toegevoegd voor elke set */}
+                <p>
+                  Set {set.setNumber}: {set.team1Score} - {set.team2Score}
+                </p>
+                <button
+                  className="delete-set-btn"
+                  onClick={() => handleDeleteSet(set.id)}
+                >
+                  ❌ Verwijder
+                </button>
               </div>
             ))}
           </div>
         </div>
-      )}
-
-      {match.setResults?.length === 0 && (
+      ) : (
         <>
           <button
             className="add-set-btn"
             onClick={() => setFormVisible((prev) => !prev)}
-            >
+          >
             {isFormVisible ? "Annuleer" : "Set scores toevoegen"}
           </button>
 
-          {isFormVisible && <ScoreForm matchId={match.id} />}
+          {isFormVisible && (
+            <ScoreForm matchId={match.id} onSetAdded={handleSetAdded} />
+          )}
         </>
       )}
-</div>
+    </div>
   );
 };
 

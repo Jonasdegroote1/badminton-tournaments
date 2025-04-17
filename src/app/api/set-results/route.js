@@ -108,16 +108,18 @@ export async function PUT(req, res) {
   }
 }
 
-export async function DELETE(req, res) {
-  
+export async function DELETE(request) {
   const session = await getServerSession({ req: request, ...authOptions });
-  
-    if (!session || session.user.roleId !== 1) {
-      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
-    }
 
-  try{
-    const { id } = await req.json();
+  if (!session || session.user.roleId !== 1) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), {
+      status: 403,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  try {
+    const { id } = await request.json();
 
     const result = await prisma.setResult.delete({
       where: { id },
@@ -129,11 +131,11 @@ export async function DELETE(req, res) {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  }
-  catch(error){
+  } catch (error) {
     console.error("Error deleting result:", error);
     return new Response(JSON.stringify({ error: "Error deleting result" }), {
       status: 500,
+      headers: { "Content-Type": "application/json" },
     });
   }
 }
