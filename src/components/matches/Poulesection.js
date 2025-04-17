@@ -9,35 +9,31 @@ const PouleSection = ({ poule }) => {
 
   const fetchMatches = async () => {
     try {
-      const response = await fetch(`/api/matches?pouleId=${poule.id}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch matches");
-      }
-      const data = await response.json();
+      const res = await fetch(`/api/matches?pouleId=${poule.id}`);
+      if (!res.ok) throw new Error("Failed to fetch matches");
+      const data = await res.json();
       setMatches(data);
-    } catch (error) {
-      console.error("Error fetching matches:", error);
+    } catch (err) {
+      console.error("Error fetching matches:", err);
     }
   };
 
   const handleGenerateMatches = async () => {
     try {
-      const response = await fetch("/api/generate-matches", {
+      const res = await fetch("/api/generate-matches", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pouleId: poule.id }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to generate matches");
-      }
-
+      if (!res.ok) throw new Error("Failed to generate matches");
       await fetchMatches();
-    } catch (error) {
-      console.error("Error generating matches:", error);
+    } catch (err) {
+      console.error("Error generating matches:", err);
     }
+  };
+
+  const toggleOpen = () => {
+    setIsOpen((prevState) => !prevState);
   };
 
   useEffect(() => {
@@ -45,10 +41,6 @@ const PouleSection = ({ poule }) => {
       fetchMatches();
     }
   }, [poule.id, isOpen]);
-
-  const toggleOpen = () => {
-    setIsOpen((prev) => !prev);
-  };
 
   return (
     <div className="poule-section">
@@ -61,15 +53,13 @@ const PouleSection = ({ poule }) => {
       </div>
 
       <div
-        className={`poule-content ${isOpen ? "open" : "closed"}`}
         ref={contentRef}
-        style={{
-          maxHeight: isOpen ? `${contentRef.current?.scrollHeight}px` : "0px",
-        }}
+        className={`poule-content ${isOpen ? "open" : "closed"}`}
       >
         <button className="create-match-button" onClick={handleGenerateMatches}>
           + create matches
         </button>
+
         <div className="matches-list">
           {matches.length > 0 ? (
             matches.map((match, index) => (

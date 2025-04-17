@@ -54,17 +54,30 @@
   color: #0070f3;
 }
 
-/* ✅ Transition setup */
+/* ↓ pure‑CSS collapse/expand */
 .poule-content {
   overflow: hidden;
-  transition: max-height 0.5s ease, padding 0.5s ease;
-  padding: 10px;
-  margin-top: 10px;
-  border-left: 2px solid #ddd;
-}
-
-.poule-content.closed {
+  transition: max-height 0.5s ease, padding 0.5s ease, margin-top 0.5s ease;
+  max-height: 0;
   padding-top: 0;
   padding-bottom: 0;
   margin-top: 0;
+  border-left: 2px solid #ddd;
+}
+
+.poule-content.open {
+  /* “One size fits all” max-height: steek ‘m maar lekker hoog */
+  max-height: 9999px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.poule-content.open .matches-list {
+  opacity: 1;
+  transition: opacity 0.3s ease 0.2s;
+}
+
+.poule-content.closed .matches-list {
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
