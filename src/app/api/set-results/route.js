@@ -22,7 +22,6 @@ export async function GET(req) {
 export async function POST(req) {
   const session = await getServerSession({ req, ...authOptions });
 
-  // Controleer of de gebruiker de juiste rol heeft
   if (!session || session.user.roleId !== 1) {
     return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
   }
@@ -30,37 +29,40 @@ export async function POST(req) {
   try {
     const sets = await req.json();
 
-    // Controleer of sets een array is en of het aantal sets 2 of 3 is
     if (!Array.isArray(sets) || sets.length < 2 || sets.length > 3) {
       return new Response(JSON.stringify({ error: "Invalid number of sets. Must be 2 or 3 sets." }), { status: 400 });
     }
 
-    // Validatie op negatieve scores en ontbrekende gegevens
     const invalid = sets.some(
       (s) =>
         s.matchId == null ||
         s.setNumber == null ||
         s.team1Score < 0 ||
         s.team2Score < 0 ||
-        s.setNumber < 1 || s.setNumber > 3 // Zorg ervoor dat setNumber tussen 1 en 3 ligt
+        s.setNumber < 1 ||
+        s.setNumber > 3
     );
+
     if (invalid) {
       return new Response(JSON.stringify({ error: "Invalid set data" }), { status: 400 });
     }
 
-    // Maak de setresultaten aan in de database
-    const result = await prisma.setResult.createMany({
+    await prisma.setResult.createMany({
       data: sets.map(({ matchId, setNumber, team1Score, team2Score }) => ({
         matchId,
         setNumber,
         team1Score,
         team2Score,
       })),
+      skipDuplicates: true,
     });
 
-    console.log("SetResults created:", result);
+    const inserted = await prisma.setResult.findMany({
+      where: { matchId: sets[0].matchId },
+      orderBy: { setNumber: "asc" },
+    });
 
-    return new Response(JSON.stringify(result), {
+    return new Response(JSON.stringify(inserted), {
       status: 201,
       headers: { "Content-Type": "application/json" },
     });

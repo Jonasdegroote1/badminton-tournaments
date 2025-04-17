@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import "../../styles/components/ScoreForm.css";
 
@@ -59,12 +58,10 @@ const ScoreForm = ({ matchId, onSetAdded }) => {
       console.log("Score opgeslagen:", data);
       alert("Score succesvol opgeslagen!");
 
-      // 🔥 Informeer ouder component dat er sets zijn toegevoegd
       if (onSetAdded) {
-        onSetAdded(data); // 'data' moet een array van de nieuw toegevoegde sets zijn
+        onSetAdded(data); // nu krijg je echte setResult-objecten terug
       }
 
-      // Reset form
       setSetScores([
         { team1Score: "", team2Score: "" },
         { team1Score: "", team2Score: "" },

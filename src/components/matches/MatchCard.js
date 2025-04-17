@@ -20,14 +20,12 @@ const MatchCard = ({ match, index }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: setId }), // Verzendt de setId naar de API
+        body: JSON.stringify({ id: setId }),
       });
 
       if (response.ok) {
-        // ✅ Verwijder de set uit de lokale state
         setSetResults((prevResults) => prevResults.filter((set) => set.id !== setId));
       } else {
-        // ⛔️ Veilige parsing van eventuele foutmelding
         let errorMessage = "Verwijderen mislukt.";
         if (response.headers.get("Content-Type")?.includes("application/json")) {
           const data = await response.json();
@@ -42,8 +40,9 @@ const MatchCard = ({ match, index }) => {
   };
 
   const handleSetAdded = (newSets) => {
+    if (!Array.isArray(newSets)) return;
     setSetResults((prev) => [...prev, ...newSets]);
-    setFormVisible(false); // Formulier sluiten na toevoegen
+    setFormVisible(false);
   };
 
   return (
@@ -70,8 +69,8 @@ const MatchCard = ({ match, index }) => {
         <div className="set-results">
           <h4>Set scores:</h4>
           <div className="set-cards">
-            {setResults.map((set, idx) => (
-              <div key={set.id} id={set.id} className="set-card"> {/* id toegevoegd voor elke set */}
+            {setResults.map((set) => (
+              <div key={set.id} id={set.id} className="set-card">
                 <p>
                   Set {set.setNumber}: {set.team1Score} - {set.team2Score}
                 </p>
