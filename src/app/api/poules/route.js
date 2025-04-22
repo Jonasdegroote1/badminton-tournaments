@@ -15,6 +15,12 @@ export async function GET(req) {
       where: { tournamentId: parseInt(tournamentId) }, // Filter op het geselecteerde toernooi
       include: {
         strength: true,
+        matches: {
+          include: {
+            teams: true,
+            setResults: true,
+          },
+        },
         teams: {
           include: {
             player1: true,
