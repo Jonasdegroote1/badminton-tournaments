@@ -2,29 +2,38 @@ export function calculateStandings(poules) {
   const standings = {};
 
   poules.forEach((poule) => {
+    // 1. Voeg alle teams van de poule toe (zelfs als ze geen match hebben gespeeld)
+    poule.teams.forEach((team) => {
+      if (!standings[team.id]) {
+        standings[team.id] = {
+          teamId: team.id,
+          teamName: `${team.player1?.firstName || ""} ${team.player1?.lastName || ""}` +
+                    (team.player2 ? ` & ${team.player2.firstName} ${team.player2.lastName}` : ''),
+          played: 0,
+          won: 0,
+          lost: 0,
+          setsWon: 0,
+          setsLost: 0,
+          points: 0,
+        };
+      }
+    });
+
+    // 2. Verwerk gespeelde matches
+    if (!poule.matches) return;
+
     poule.matches.forEach((match) => {
       if (!match.setResults || match.setResults.length === 0) return;
+      if (!match.teams || match.teams.length < 2) return;
 
-      const [team1, team2] = match.teams.map((entry) => entry.team);
+      const [team1Entry, team2Entry] = match.teams;
+      const team1 = team1Entry?.team;
+      const team2 = team2Entry?.team;
+
+      if (!team1 || !team2) return;
+
       const team1Id = team1.id;
       const team2Id = team2.id;
-
-      // Initialiseer beide teams indien nodig
-      [team1, team2].forEach((team) => {
-        if (!standings[team.id]) {
-          standings[team.id] = {
-            teamId: team.id,
-            teamName: `${team.player1.firstName} ${team.player1.lastName}` +
-                      (team.player2 ? ` & ${team.player2.firstName} ${team.player2.lastName}` : ''),
-            played: 0,
-            won: 0,
-            lost: 0,
-            setsWon: 0,
-            setsLost: 0,
-            points: 0,
-          };
-        }
-      });
 
       let team1SetsWon = 0;
       let team2SetsWon = 0;
@@ -41,7 +50,6 @@ export function calculateStandings(poules) {
         team2TotalPoints += set.team2Score;
       });
 
-      // Update stats
       standings[team1Id].played++;
       standings[team2Id].played++;
 
@@ -63,16 +71,11 @@ export function calculateStandings(poules) {
     });
   });
 
-  // Sorteer: won > setverschil > punten
-  const sortedStandings = Object.values(standings).sort((a, b) => {
+  return Object.values(standings).sort((a, b) => {
     if (b.won !== a.won) return b.won - a.won;
-
     const setDiffA = a.setsWon - a.setsLost;
     const setDiffB = b.setsWon - b.setsLost;
     if (setDiffB !== setDiffA) return setDiffB - setDiffA;
-
     return b.points - a.points;
   });
-
-  return sortedStandings;
 }

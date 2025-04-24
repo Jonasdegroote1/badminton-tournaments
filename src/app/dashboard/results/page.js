@@ -27,7 +27,8 @@ export default function ResultsPage() {
           <h2>Geselecteerde Poule: {selectedPoule.name}</h2>
           <p><strong>Sterkte:</strong> {selectedPoule.strength?.name || "-"}</p>
           <p><strong>Aantal teams:</strong> {selectedPoule.teams?.length || 0}</p>
-          <pre>{JSON.stringify(selectedPoule, null, 2)}</pre> {/* debug */}
+
+          <StandingsTable standings={selectedPoule} />
         </div>
       )}
     </div>
