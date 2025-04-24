@@ -3,6 +3,7 @@
 import useTournamentStore from "@/lib/tournamentStore";
 import TournamentSelector from "@/components/sidebar/TournamentSelector";
 import ResultsViewer from "@/components/ResultsViewer";
+import LoadingShuttlecock from "@/components/LoadingShuttlecock";
 
 
 export default function Home() {
@@ -12,6 +13,8 @@ export default function Home() {
     <div className="results-page">
       <TournamentSelector />
       <h1>Resultaten</h1>
+
+    <LoadingShuttlecock /> {/* Laad animatie toevoegen */}
 
       {selectedTournament && <ResultsViewer tournament={selectedTournament} />}
     </div>
