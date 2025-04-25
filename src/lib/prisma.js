@@ -1,6 +1,6 @@
 // src/lib/prisma.js
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client/edge'
 
 // Voorkom meerdere Prisma instanties tijdens development (door hot reloads)
 const globalForPrisma = globalThis
