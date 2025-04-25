@@ -1,11 +1,14 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["clientExtensions"]
+  output   = "./node_modules/@prisma/client"
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
 
 enum Session {
   VM  // Voormiddag

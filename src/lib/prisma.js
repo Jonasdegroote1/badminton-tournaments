@@ -1,15 +1,9 @@
 // src/lib/prisma.js
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client/edge'
+import { withAccelerate } from '@prisma/extension-accelerate'
 
-// Voorkom meerdere Prisma instanties tijdens development (door hot reloads)
-const globalForPrisma = globalThis
-
-const prisma = globalForPrisma.prisma ??
-  new PrismaClient({
-    log: ['error'], // je kunt hier ook 'query', 'info' etc. loggen
-  })
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// Geen globalThis checks nodig bij Edge/serverless
+const prisma = new PrismaClient().$extends(withAccelerate())
 
 export { prisma }
