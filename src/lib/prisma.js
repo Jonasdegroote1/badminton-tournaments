@@ -1,12 +1,8 @@
 // src/lib/prisma.js
-
-import { PrismaClient } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
-
-const globalForPrisma = globalThis
-
-const prisma = globalForPrisma.prisma ?? new PrismaClient().$extends(withAccelerate())
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
-
-export { prisma }
+ import { PrismaClient } from '@prisma/client';
+ 
+ // Maak een nieuwe Prisma Client instantie
+ const prisma = new PrismaClient();
+ 
+ // Exporteer prisma zodat je het in andere delen van je code kunt gebruiken
+ export { prisma };
