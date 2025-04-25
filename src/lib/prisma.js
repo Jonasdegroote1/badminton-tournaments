@@ -1,8 +1,15 @@
 // src/lib/prisma.js
- import { PrismaClient } from '@prisma/client';
- 
- // Maak een nieuwe Prisma Client instantie
- const prisma = new PrismaClient();
- 
- // Exporteer prisma zodat je het in andere delen van je code kunt gebruiken
- export { prisma };
+
+import { PrismaClient } from '@prisma/client'
+
+// Voorkom meerdere Prisma instanties tijdens development (door hot reloads)
+const globalForPrisma = globalThis
+
+const prisma = globalForPrisma.prisma ??
+  new PrismaClient({
+    log: ['error'], // je kunt hier ook 'query', 'info' etc. loggen
+  })
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+
+export { prisma }
