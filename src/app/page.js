@@ -13,9 +13,6 @@ export default function Home() {
     <div className="results-page">
       <TournamentSelector />
       <h1>Resultaten</h1>
-
-    <LoadingShuttlecock /> {/* Laad animatie toevoegen */}
-
       {selectedTournament && <ResultsViewer tournament={selectedTournament} />}
     </div>
   );
