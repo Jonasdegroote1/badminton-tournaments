@@ -1,56 +1,47 @@
-/* Container voor alle teams */
-.standings-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin-top: 2rem;
-  padding: 1rem;
-}
-
-/* Per team een kaart */
-.team-card {
-  background: white;
-  border-radius: 10px;
-  padding: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-/* Teamnaam bovenaan */
-.team-name {
-  font-weight: bold;
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* De statistieken in een grid */
-.team-stats {
+.standings-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem 1rem;
+  grid-template-columns: 40px 2fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 1rem;
 }
 
-/* Style elke cel */
-.team-stats div {
-  background: #f0f0f0;
-  padding: 0.6rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-}
-
-/* Labels groen */
-.stat-label {
+.standings-header {
   font-weight: bold;
-  color: #4CAF50;
+  background-color: #4CAF50; /* Groene kleur */
+  color: white;
+  padding: 0.5rem;
+  text-align: center;
+  border-radius: 4px;
 }
 
-/* Responsiveness */
-@media (min-width: 768px) {
-  .standings-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+.standings-rank {
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Alle cellen */
+.standings-grid > div {
+  background: #f9f9f9;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* Responsive aanpassing */
+@media (max-width: 768px) {
+  .standings-grid {
+    grid-template-columns: 30px 1fr 1fr;
+    grid-auto-rows: auto;
+  }
+
+  /* Headers aanpassen */
+  .standings-header:nth-child(n+4),
+  .standings-grid > div:nth-child(4n),
+  .standings-grid > div:nth-child(5n),
+  .standings-grid > div:nth-child(6n),
+  .standings-grid > div:nth-child(7n) {
+    display: none;
   }
 }
