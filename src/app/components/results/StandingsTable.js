@@ -1,31 +1,31 @@
 import { calculateStandings } from "@/lib/calculateStandings";
-import "@/styles/components/standingsTable.css"; // optioneel, als je CSS extern houdt
+import "@/styles/components/standingsTable.css"; // Zorg dat dit pad klopt
 
 export default function StandingsTable({ standings }) {
   if (!standings || !standings.matches) {
     return <p>Geen gegevens beschikbaar.</p>;
   }
 
-  const results = calculateStandings([standings]); // geef array mee zoals verwacht
+  const results = calculateStandings([standings]);
 
   return (
-    <div className="standings-grid">
-      <div className="standings-header">Team</div>
-      <div className="standings-header">Gewonnen</div>
-      <div className="standings-header">Verloren</div>
-      <div className="standings-header">Sets Gewonnen</div>
-      <div className="standings-header">Sets Verloren</div>
-      <div className="standings-header">Totaal Punten</div>
-
-      {results.map((team) => (
-        <>
-          <div key={team.teamId}>{team.teamName}</div>
-          <div>{team.won}</div>
-          <div>{team.lost}</div>
-          <div>{team.setsWon}</div>
-          <div>{team.setsLost}</div>
-          <div>{team.points}</div>
-        </>
+    <div className="standings-container">
+      {results.map((team, index) => (
+        <div key={team.teamId} className="team-card">
+          <div className="team-name">
+            {index === 0 && <span>🥇</span>}
+            {index === 1 && <span>🥈</span>}
+            {index === 2 && <span>🥉</span>}
+            {team.teamName}
+          </div>
+          <div className="team-stats">
+            <div><span className="stat-label">Gewonnen</span><br />{team.won}</div>
+            <div><span className="stat-label">Verloren</span><br />{team.lost}</div>
+            <div><span className="stat-label">Sets Gewonnen</span><br />{team.setsWon}</div>
+            <div><span className="stat-label">Sets Verloren</span><br />{team.setsLost}</div>
+            <div><span className="stat-label">Totaal Punten</span><br />{team.points}</div>
+          </div>
+        </div>
       ))}
     </div>
   );
