@@ -86,3 +86,67 @@
   margin-top: 0.5rem;
   margin-bottom: 2rem;
 }
+
+/* === RESPONSIVE AANPASSINGEN === */
+@media (max-width: 1024px) {
+  .results-viewer {
+    padding: 1.5rem;
+  }
+
+  .results-viewer .results-section {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .results-viewer .standings-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .results-viewer .button {
+    width: 100%;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+
+  .results-viewer select {
+    max-width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .results-viewer h1,
+  .results-viewer h2 {
+    font-size: 1.5rem;
+  }
+
+  .results-viewer p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .results-viewer {
+    padding: 1rem;
+  }
+
+  .results-viewer .results-section {
+    padding: 1rem;
+  }
+
+  .results-viewer .standings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-viewer .button {
+    font-size: 0.95rem;
+  }
+
+  .results-viewer select {
+    font-size: 0.9rem;
+  }
+
+  .results-viewer h1,
+  .results-viewer h2 {
+    font-size: 1.3rem;
+  }
+}
