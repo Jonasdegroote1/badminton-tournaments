@@ -1,20 +1,56 @@
-.standings-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
-  margin-top: 16px;
+/* Container voor alle teams */
+.standings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding: 1rem;
 }
 
-.standings-header {
+/* Per team een kaart */
+.team-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Teamnaam bovenaan */
+.team-name {
   font-weight: bold;
-  background-color: #f0f0f0;
-  padding: 8px;
-  border-radius: 4px;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.standings-grid > div {
-  padding: 8px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+/* De statistieken in een grid */
+.team-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+}
+
+/* Style elke cel */
+.team-stats div {
+  background: #f0f0f0;
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+/* Labels groen */
+.stat-label {
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+/* Responsiveness */
+@media (min-width: 768px) {
+  .standings-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
 }
