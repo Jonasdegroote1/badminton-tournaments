@@ -2,7 +2,6 @@ export function calculateStandings(poules) {
   const standings = {};
 
   poules.forEach((poule) => {
-    // 1. Voeg alle teams van de poule toe (zelfs als ze geen match hebben gespeeld)
     poule.teams.forEach((team) => {
       if (!standings[team.id]) {
         standings[team.id] = {
@@ -19,7 +18,6 @@ export function calculateStandings(poules) {
       }
     });
 
-    // 2. Verwerk gespeelde matches
     if (!poule.matches) return;
 
     poule.matches.forEach((match) => {
@@ -71,11 +69,24 @@ export function calculateStandings(poules) {
     });
   });
 
-  return Object.values(standings).sort((a, b) => {
+  const sorted = Object.values(standings).sort((a, b) => {
     if (b.won !== a.won) return b.won - a.won;
     const setDiffA = a.setsWon - a.setsLost;
     const setDiffB = b.setsWon - b.setsLost;
     if (setDiffB !== setDiffA) return setDiffB - setDiffA;
     return b.points - a.points;
   });
+
+  // Medaille toevoegen
+  sorted.forEach((team, index) => {
+    if (index === 0) {
+      team.teamName = "🥇 " + team.teamName;
+    } else if (index === 1) {
+      team.teamName = "🥈 " + team.teamName;
+    } else if (index === 2) {
+      team.teamName = "🥉 " + team.teamName;
+    }
+  });
+
+  return sorted;
 }
