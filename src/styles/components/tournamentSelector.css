@@ -15,6 +15,24 @@
   border: 3px solid #0d48ec ;
 }
 
+/* Fade-in animatie */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dropdown open animatie */
+@keyframes dropdownOpen {
+  0% {
+    transform: scaleY(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
 .results-page .tournament-selector {
   display: flex;
   flex-direction: column;
@@ -25,6 +43,7 @@
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.6s ease-out forwards;
 }
 
 .results-page .tournament-label {
@@ -50,6 +69,7 @@
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1rem;
+  transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
 /* Hover & focus states */
@@ -60,6 +80,8 @@
 .results-page .tournament-dropdown:focus {
   border-color: #4CAF50;
   box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+  animation: dropdownOpen 0.3s ease-out;
+  transform-origin: top;
 }
 
 /* Responsive */
@@ -74,3 +96,4 @@
     padding: 0.65rem 0.9rem;
   }
 }
+
