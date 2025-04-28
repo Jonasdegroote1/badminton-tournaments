@@ -5,6 +5,7 @@ import StandingsTable from "@/app/components/results/StandingsTable";
 import { useState } from "react";
 import useSWR from "swr";
 import LoadingShuttlecock from "@/components/LoadingShuttlecock";  // Zorg ervoor dat je deze component hebt.
+import "@/styles/components/ResultsViewer.css";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
