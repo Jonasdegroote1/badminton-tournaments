@@ -12,7 +12,6 @@ export default function Home() {
   return (
     <div className="results-page">
       <TournamentSelector />
-      <h1>Resultaten</h1>
       {selectedTournament && <ResultsViewer tournament={selectedTournament} />}
     </div>
   );
