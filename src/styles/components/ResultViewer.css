@@ -3,6 +3,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  animation: fadeIn 0.8s ease-in-out;
 }
 
 .results-viewer .loading-container {
@@ -19,6 +20,7 @@
   background-color: #f9f9f9;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 1s ease-in-out;
 }
 
 /* Knoppen voor Poule selectie */
@@ -32,6 +34,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-right: 1rem;
+  animation: fadeIn 1.2s ease-in-out;
 }
 
 .results-viewer .button:hover {
@@ -48,6 +51,7 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 1.4s ease-in-out;
 }
 
 .results-viewer .standings-grid > div {
@@ -85,6 +89,7 @@
   border-radius: 8px;
   margin-top: 0.5rem;
   margin-bottom: 2rem;
+  animation: fadeIn 1.6s ease-in-out;
 }
 
 /* === RESPONSIVE AANPASSINGEN === */
@@ -148,5 +153,17 @@
   .results-viewer h1,
   .results-viewer h2 {
     font-size: 1.3rem;
+  }
+}
+
+/* === FADE-IN ANIMATIE === */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
