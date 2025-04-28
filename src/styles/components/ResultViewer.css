@@ -38,7 +38,7 @@
   background-color: #45a049;
 }
 
-/* Standings Grid (Desktop) */
+/* Standings Grid Desktop */
 .results-viewer .standings-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -62,27 +62,6 @@
   background-color: #4CAF50;
   color: white;
   font-weight: bold;
-}
-
-/* Kleur per kolom (Desktop en Mobiel) */
-.results-viewer .standings-grid > div:nth-child(6n+2) {
-  color: #28a745; /* Gewonnen (groen) */
-}
-
-.results-viewer .standings-grid > div:nth-child(6n+3) {
-  color: #dc3545; /* Verloren (rood) */
-}
-
-.results-viewer .standings-grid > div:nth-child(6n+4) {
-  color: #007bff; /* Sets Gewonnen (blauw) */
-}
-
-.results-viewer .standings-grid > div:nth-child(6n+5) {
-  color: #6c757d; /* Sets Verloren (grijs) */
-}
-
-.results-viewer .standings-grid > div:nth-child(6n+6) {
-  color: #ffc107; /* Punten (geel) */
 }
 
 /* Algemene tekststijl */
@@ -109,7 +88,14 @@
   margin-bottom: 2rem;
 }
 
-/* Mobiel responsief gedrag */
+/* Labels achtergrondkleur */
+.results-viewer .standings-grid > div.standings-label {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+}
+
+/* Mobiel layout */
 @media (max-width: 768px) {
   .results-viewer .standings-grid {
     display: flex;
@@ -118,14 +104,25 @@
   }
 
   .results-viewer .standings-grid > div {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    background-color: #ffffff;
+    background: white;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 1rem;
-    width: 100%;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    text-align: left;
+    font-size: 1rem;
+  }
+
+  /* Labels in mobiel in aparte achtergrond */
+  .results-viewer .standings-grid > div.standings-label {
+    background-color: transparent;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.1rem;
+    grid-column: span 2;
+    margin-bottom: 0.5rem;
   }
 }
