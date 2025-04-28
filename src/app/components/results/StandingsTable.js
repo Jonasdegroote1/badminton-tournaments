@@ -11,7 +11,6 @@ export default function StandingsTable({ standings }) {
   return (
     <div className="standings-grid">
       {/* Kopteksten */}
-      <div className="standings-header">#</div>
       <div className="standings-header">Team</div>
       <div className="standings-header">Gewonnen</div>
       <div className="standings-header">Verloren</div>
@@ -22,9 +21,6 @@ export default function StandingsTable({ standings }) {
       {/* Gegevens */}
       {results.map((team, index) => (
         <>
-          <div className="standings-rank" key={`rank-${team.teamId}`}>
-            {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : index + 1}
-          </div>
           <div key={`team-${team.teamId}`}>{team.teamName}</div>
           <div>{team.won}</div>
           <div>{team.lost}</div>
