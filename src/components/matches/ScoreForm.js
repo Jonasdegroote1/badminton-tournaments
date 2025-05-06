@@ -59,7 +59,7 @@ const ScoreForm = ({ matchId, onSetAdded }) => {
       alert("Score succesvol opgeslagen!");
 
       if (onSetAdded) {
-        onSetAdded(data); // nu krijg je echte setResult-objecten terug
+        onSetAdded(data);
       }
 
       setSetScores([
