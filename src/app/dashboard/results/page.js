@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import ScoreForm from "@/app/components/ScoreForm"; // Pas dit pad aan indien nodig
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
