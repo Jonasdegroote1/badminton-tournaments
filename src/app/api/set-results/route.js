@@ -1,8 +1,10 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
+import { NextResponse } from "next/server";
 
 const { prisma } = require("@/lib/prisma");
 
+// GET: Haalt sets op van een match
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const matchId = searchParams.get("matchId");
@@ -19,8 +21,9 @@ export async function GET(req) {
   return NextResponse.json(sets);
 }
 
+// POST: Maakt sets aan
 export async function POST(req) {
-  const session = await getServerSession({ req, ...authOptions });
+  const session = await getServerSession(authOptions);
 
   if (!session || session.user.roleId !== 1) {
     return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
@@ -74,15 +77,15 @@ export async function POST(req) {
   }
 }
 
-export async function PUT(req, res) {
-  
-  const session = await getServerSession({ req: request, ...authOptions });
-  
-    if (!session || session.user.roleId !== 1) {
-      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
-    }
+// PUT: Update een bestaand setresultaat
+export async function PUT(req) {
+  const session = await getServerSession(authOptions);
 
-  try{
+  if (!session || session.user.roleId !== 1) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+  }
+
+  try {
     const { id, matchId, setNumber, team1Score, team2Score } = await req.json();
 
     const result = await prisma.setResult.update({
@@ -95,14 +98,11 @@ export async function PUT(req, res) {
       },
     });
 
-    console.log("Result updated in database:", result);
-
     return new Response(JSON.stringify(result), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  }
-  catch(error){
+  } catch (error) {
     console.error("Error updating result:", error);
     return new Response(JSON.stringify({ error: "Error updating result" }), {
       status: 500,
@@ -110,8 +110,9 @@ export async function PUT(req, res) {
   }
 }
 
-export async function DELETE(request) {
-  const session = await getServerSession({ req: request, ...authOptions });
+// DELETE: Verwijdert een setresultaat
+export async function DELETE(req) {
+  const session = await getServerSession(authOptions);
 
   if (!session || session.user.roleId !== 1) {
     return new Response(JSON.stringify({ error: "Forbidden" }), {
@@ -121,13 +122,11 @@ export async function DELETE(request) {
   }
 
   try {
-    const { id } = await request.json();
+    const { id } = await req.json();
 
     const result = await prisma.setResult.delete({
       where: { id },
     });
-
-    console.log("Result deleted from database:", result);
 
     return new Response(JSON.stringify(result), {
       status: 200,
