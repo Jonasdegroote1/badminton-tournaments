@@ -42,8 +42,7 @@ export default function ResultsPage() {
   const selectedPoule = poules.find((p) => p.id === selectedPouleId);
 
   return (
-    <div className="results-viewer">
-      <h1>Resultaten</h1>
+    <div>
       <PouleSelector poules={poules} onSelectPouleId={setSelectedPouleId} />
 
       {selectedPoule && (
