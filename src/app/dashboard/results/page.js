@@ -8,16 +8,17 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 export default function ResultsPage() {
   const [selectedPouleId, setSelectedPouleId] = useState(null);
 
-  const { data: poules } = useSWR("/api/poules", fetcher);
-  const {
-    data: matches,
-    mutate,
-    isLoading,
-    error,
-  } = useSWR(
-    selectedPouleId ? `/api/matches?pouleId=${selectedPouleId}` : null,
-    fetcher
+  const { data: poules } = useSWR(
+    selectedPouleId ? `/api/poules?tournamentId=${selectedTournament.id}` : null, 
+    fetcher, 
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+      refreshInterval: 0
+    }
   );
+
 
   if (!poules) return <p>Poules worden geladen...</p>;
 
