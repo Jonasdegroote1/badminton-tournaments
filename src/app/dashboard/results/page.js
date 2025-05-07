@@ -3,10 +3,13 @@
 import { useState } from "react";
 import useSWR from "swr";
 import LoadingShuttlecock from "@/components/LoadingShuttlecock";  // Zorg ervoor dat je deze component hebt.
+import useTournamentStore from "@/lib/tournamentStore"
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function ResultsPage() {
+    const { selectedTournament: tournament } = useTournamentStore();
+    const [selectedPouleId, setSelectedPouleId] = useState(null);
     const { data: poules, error, isLoading } = useSWR(
       tournament ? `/api/poules?tournamentId=${tournament.id}` : null,
       fetcher,
