@@ -25,6 +25,21 @@ const PouleSection = ({ poule }) => {
     }
   );
 
+    const handleGenerateMatches = async () => {
+    try {
+      const res = await fetch("/api/generate-matches", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pouleId: poule.id }),
+      });
+      if (!res.ok) throw new Error("Failed to generate matches");
+      await fetchMatches();
+    } catch (err) {
+      console.error("Error generating matches:", err);
+    }
+  };
+
+
   const toggleOpen = () => {
     setIsOpen((prevState) => !prevState);
   };
@@ -45,7 +60,9 @@ const PouleSection = ({ poule }) => {
           {isOpen ? "▲ Close" : "▼ Open"}
         </button>
       </div>
-
+        <button className="create-match-button" onClick={handleGenerateMatches}>
+          + create matches
+        </button>
       <div
         ref={contentRef}
         className={`poule-content ${isOpen ? "open" : "closed"}`}
