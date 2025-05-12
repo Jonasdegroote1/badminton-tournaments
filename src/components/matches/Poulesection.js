@@ -7,6 +7,7 @@ const PouleSection = ({ poule }) => {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef(null);
 
+  // Functie om de matches op te halen
   const fetchMatches = async () => {
     try {
       const res = await fetch(`/api/matches?pouleId=${poule.id}`);
@@ -18,6 +19,7 @@ const PouleSection = ({ poule }) => {
     }
   };
 
+  // Functie om matches te genereren
   const handleGenerateMatches = async () => {
     try {
       const res = await fetch("/api/generate-matches", {
@@ -32,15 +34,26 @@ const PouleSection = ({ poule }) => {
     }
   };
 
+  // Functie om de poule in- of uit te klappen
   const toggleOpen = () => {
     setIsOpen((prevState) => !prevState);
   };
 
+  // UseEffect om matches op te halen wanneer de poule wordt geopend
   useEffect(() => {
     if (isOpen) {
       fetchMatches();
     }
   }, [poule.id, isOpen]);
+
+  // Sorteer de matches op basis van sets (gespeeld of niet gespeeld)
+  const sortedMatches = [...matches].sort((a, b) => {
+    const aHasSets = a.setResults && a.setResults.length > 0;
+    const bHasSets = b.setResults && b.setResults.length > 0;
+
+    // Gespeelde matches eerst, dan te spelen matches
+    return aHasSets === bHasSets ? 0 : aHasSets ? -1 : 1;
+  });
 
   return (
     <div className="poule-section">
@@ -56,14 +69,14 @@ const PouleSection = ({ poule }) => {
         ref={contentRef}
         className={`poule-content ${isOpen ? "open" : "closed"}`}
       >
-        {/* De knop blijft nu altijd zichtbaar */}
+        {/* Knop voor het genereren van matches */}
         <button className="create-match-button" onClick={handleGenerateMatches}>
           + create matches
         </button>
 
         <div className="matches-list">
           {matches.length > 0 ? (
-            matches.map((match, index) => (
+            sortedMatches.map((match, index) => (
               <MatchCard key={match.id} match={match} index={index} />
             ))
           ) : (
