@@ -19,34 +19,21 @@ const PouleSection = ({ poule }) => {
     isOpen ? `/api/matches?pouleId=${poule.id}` : null,
     fetcher,
     {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      refreshInterval: 0,
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+      refreshInterval: 5000, // Poll elke 5 sec. voor updates
     }
   );
-
-  const handleGenerateMatches = async () => {
-    try {
-      const res = await fetch("/api/generate-matches", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pouleId: poule.id }),
-      });
-      if (!res.ok) throw new Error("Failed to generate matches");
-      mutate(); // Herlaad de matches direct
-    } catch (err) {
-      console.error("Error generating matches:", err);
-    }
-  };
 
   const toggleOpen = () => {
     setIsOpen((prevState) => !prevState);
   };
 
   const sortedMatches = [...matches].sort((a, b) => {
-    const aHasSets = a.sets && a.sets.length > 0;
-    const bHasSets = b.sets && b.sets.length > 0;
-    return aHasSets - bHasSets;
+    const aPlayed = a.setResults?.length > 0;
+    const bPlayed = b.setResults?.length > 0;
+    if (aPlayed === bPlayed) return 0;
+    return aPlayed ? 1 : -1; // Gespeelde wedstrijden onderaan
   });
 
   return (
@@ -63,16 +50,17 @@ const PouleSection = ({ poule }) => {
         ref={contentRef}
         className={`poule-content ${isOpen ? "open" : "closed"}`}
       >
-        <button className="create-match-button" onClick={handleGenerateMatches}>
-          + create matches
-        </button>
-
         <div className="matches-list">
           {isLoading ? (
             <LoadingShuttlecock />
           ) : sortedMatches.length > 0 ? (
             sortedMatches.map((match, index) => (
-              <MatchCard key={match.id} match={match} index={index} onUpdate={mutate} />
+              <MatchCard
+                key={match.id}
+                match={match}
+                index={index}
+                onUpdate={mutate}
+              />
             ))
           ) : (
             <p>No matches generated yet.</p>
