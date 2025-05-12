@@ -1,16 +1,22 @@
 import React, { useState } from "react";
 import "../../styles/components/MatchCard.css";
 import ScoreForm from "@/components/matches/ScoreForm";
+import useSWR, { mutate } from "swr";
 
-const MatchCard = ({ match, index }) => {
+// Fetcher voor SWR
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+const MatchCard = ({ match, index, pouleId }) => {
   const [isFormVisible, setFormVisible] = useState(false);
   const [setResults, setSetResults] = useState(match.setResults || []);
 
+  // Functie om de teamnaam te formatteren
   const formatTeam = (team) => {
     const { player1, player2 } = team;
     return `${player1.firstName} ${player1.lastName} & ${player2.firstName} ${player2.lastName}`;
   };
 
+  // Functie om een set te verwijderen
   const handleDeleteSet = async (setId) => {
     if (!window.confirm("Weet je zeker dat je deze set wilt verwijderen?")) return;
 
@@ -25,6 +31,8 @@ const MatchCard = ({ match, index }) => {
 
       if (response.ok) {
         setSetResults((prevResults) => prevResults.filter((set) => set.id !== setId));
+        // Herlaad de matches na verwijderen van de set
+        mutate(`/api/matches?pouleId=${pouleId}`);
       } else {
         let errorMessage = "Verwijderen mislukt.";
         if (response.headers.get("Content-Type")?.includes("application/json")) {
@@ -39,10 +47,14 @@ const MatchCard = ({ match, index }) => {
     }
   };
 
+  // Functie wanneer een nieuwe set wordt toegevoegd
   const handleSetAdded = (newSets) => {
     if (!Array.isArray(newSets)) return;
     setSetResults((prev) => [...prev, ...newSets]);
     setFormVisible(false);
+
+    // Na toevoegen van de set, herlaad de matches
+    mutate(`/api/matches?pouleId=${pouleId}`);
   };
 
   return (
