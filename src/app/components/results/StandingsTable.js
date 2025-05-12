@@ -1,45 +1,16 @@
 import { calculateStandings } from "@/lib/calculateStandings";
 import "@/styles/components/standingsTable.css";
-import useSWR from "swr";
 
-// Fetcher voor SWR
-const fetcher = (url) => fetch(url).then((res) => res.json());
-
-export default function StandingsTable({ poule }) {
-  // Debugging: Log de poule die wordt doorgegeven
-  console.log("Poule in StandingsTable:", poule);
-
-  const { data: matches = [], error, isLoading, mutate } = useSWR(
-    poule?.id ? `/api/matches?pouleId=${poule.id}` : null,
-    fetcher,
-    {
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
-    }
-  );
-
-  if (!poule || !poule.id) {
-    console.log("Geen poule geselecteerd.");
-    return <p>Geen poule geselecteerd.</p>;
+export default function StandingsTable({ standings }) {
+  if (!standings || !standings.matches) {
+    return <p>Geen gegevens beschikbaar.</p>;
   }
 
-  if (isLoading) {
-    console.log("Standings worden geladen...");
-    return <p>Standings laden...</p>;
-  }
-
-  if (error) {
-    console.error("Fout bij laden van wedstrijden:", error);
-    return <p>Fout bij laden van wedstrijden.</p>;
-  }
-
-  // Debugging: Log de ontvangen matches
-  console.log("Matches data:", matches);
-
-  const results = calculateStandings([{ ...poule, matches }]);
+  const results = calculateStandings([standings]);
 
   return (
     <div className="standings-grid">
+      {/* Kopteksten */}
       <div className="standings-header">Team</div>
       <div className="standings-header">Gewonnen</div>
       <div className="standings-header">Verloren</div>
@@ -47,15 +18,16 @@ export default function StandingsTable({ poule }) {
       <div className="standings-header">Sets Verloren</div>
       <div className="standings-header">Totaal Punten</div>
 
-      {results.map((team) => (
-        <div key={`team-${team.teamId}`}>
-          <div>{team.teamName}</div>
+      {/* Gegevens */}
+      {results.map((team, index) => (
+        <>
+          <div key={team-${team.teamId}}>{team.teamName}</div>
           <div>{team.won}</div>
           <div>{team.lost}</div>
           <div>{team.setsWon}</div>
           <div>{team.setsLost}</div>
           <div>{team.points}</div>
-        </div>
+        </>
       ))}
     </div>
   );
