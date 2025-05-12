@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import useSWR from "swr";
 import MatchCard from "./MatchCard";
 import LoadingShuttlecock from "@/components/LoadingShuttlecock";
+import StandingsTable from "@/app/components/results/StandingsTable";
+import { calculateStandings } from "@/lib/calculateStandings";
 import "../../styles/components/PouleSection.css";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -21,11 +23,11 @@ const PouleSection = ({ poule }) => {
     {
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
-      refreshInterval: 5000, // Poll elke 5 sec. voor updates
+      refreshInterval: 5000,
     }
   );
 
-    const handleGenerateMatches = async () => {
+  const handleGenerateMatches = async () => {
     try {
       const res = await fetch("/api/generate-matches", {
         method: "POST",
@@ -33,12 +35,11 @@ const PouleSection = ({ poule }) => {
         body: JSON.stringify({ pouleId: poule.id }),
       });
       if (!res.ok) throw new Error("Failed to generate matches");
-      await fetchMatches();
+      mutate(); // herladen
     } catch (err) {
       console.error("Error generating matches:", err);
     }
   };
-
 
   const toggleOpen = () => {
     setIsOpen((prevState) => !prevState);
@@ -48,8 +49,15 @@ const PouleSection = ({ poule }) => {
     const aPlayed = a.setResults?.length > 0;
     const bPlayed = b.setResults?.length > 0;
     if (aPlayed === bPlayed) return 0;
-    return aPlayed ? 1 : -1; // Gespeelde wedstrijden onderaan
+    return aPlayed ? 1 : -1;
   });
+
+  const standings = calculateStandings([
+    {
+      ...poule,
+      matches: matches,
+    },
+  ]);
 
   return (
     <div className="poule-section">
@@ -60,6 +68,7 @@ const PouleSection = ({ poule }) => {
           {isOpen ? "▲ Close" : "▼ Open"}
         </button>
       </div>
+
       <div
         ref={contentRef}
         className={`poule-content ${isOpen ? "open" : "closed"}`}
@@ -67,7 +76,7 @@ const PouleSection = ({ poule }) => {
         <button className="create-match-button" onClick={handleGenerateMatches}>
           + create matches
         </button>
-        
+
         <div className="matches-list">
           {isLoading ? (
             <LoadingShuttlecock />
@@ -83,6 +92,11 @@ const PouleSection = ({ poule }) => {
           ) : (
             <p>No matches generated yet.</p>
           )}
+        </div>
+
+        <div className="standings-section">
+          <h3>Standings</h3>
+          <StandingsTable standings={standings} />
         </div>
       </div>
     </div>
