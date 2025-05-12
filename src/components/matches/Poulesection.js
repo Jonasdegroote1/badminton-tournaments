@@ -77,6 +77,7 @@ const PouleSection = ({ poule }) => {
                 key={match.id}
                 match={match}
                 index={index}
+                pouleId={poule.id}
                 onUpdate={mutate}
               />
             ))
