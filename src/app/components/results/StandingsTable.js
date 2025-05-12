@@ -21,7 +21,7 @@ export default function StandingsTable({ standings }) {
       {/* Gegevens */}
       {results.map((team, index) => (
         <>
-          <div key={team-${team.teamId}}>{team.teamName}</div>
+          <div key={`team-${team.teamId}`}>{team.teamName}</div>
           <div>{team.won}</div>
           <div>{team.lost}</div>
           <div>{team.setsWon}</div>
