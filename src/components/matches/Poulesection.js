@@ -1,22 +1,29 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
+import useSWR from "swr";
 import MatchCard from "./MatchCard";
+import LoadingShuttlecock from "@components/LoadingShuttlecock";
 import "../../styles/components/PouleSection.css";
 
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
 const PouleSection = ({ poule }) => {
-  const [matches, setMatches] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef(null);
 
-  const fetchMatches = async () => {
-    try {
-      const res = await fetch(`/api/matches?pouleId=${poule.id}`);
-      if (!res.ok) throw new Error("Failed to fetch matches");
-      const data = await res.json();
-      setMatches(data);
-    } catch (err) {
-      console.error("Error fetching matches:", err);
+  const {
+    data: matches = [],
+    error,
+    isLoading,
+    mutate,
+  } = useSWR(
+    isOpen ? `/api/matches?pouleId=${poule.id}` : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshInterval: 0,
     }
-  };
+  );
 
   const handleGenerateMatches = async () => {
     try {
@@ -26,7 +33,7 @@ const PouleSection = ({ poule }) => {
         body: JSON.stringify({ pouleId: poule.id }),
       });
       if (!res.ok) throw new Error("Failed to generate matches");
-      await fetchMatches();
+      mutate(); // Herlaad de matches direct
     } catch (err) {
       console.error("Error generating matches:", err);
     }
@@ -36,11 +43,11 @@ const PouleSection = ({ poule }) => {
     setIsOpen((prevState) => !prevState);
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchMatches();
-    }
-  }, [poule.id, isOpen]);
+  const sortedMatches = [...matches].sort((a, b) => {
+    const aHasSets = a.sets && a.sets.length > 0;
+    const bHasSets = b.sets && b.sets.length > 0;
+    return aHasSets - bHasSets;
+  });
 
   return (
     <div className="poule-section">
@@ -61,9 +68,11 @@ const PouleSection = ({ poule }) => {
         </button>
 
         <div className="matches-list">
-          {matches.length > 0 ? (
-            matches.map((match, index) => (
-              <MatchCard key={match.id} match={match} index={index} />
+          {isLoading ? (
+            <LoadingShuttlecock />
+          ) : sortedMatches.length > 0 ? (
+            sortedMatches.map((match, index) => (
+              <MatchCard key={match.id} match={match} index={index} onUpdate={mutate} />
             ))
           ) : (
             <p>No matches generated yet.</p>
