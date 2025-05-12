@@ -53,40 +53,64 @@ export async function POST(req) {
       );
     }
 
+    // ✅ Herschik de wedstrijden via round-robin met betere verdeling
+    function roundRobinOrder(teams) {
+      const matches = [];
+      for (let i = 0; i < teams.length; i++) {
+        for (let j = i + 1; j < teams.length; j++) {
+          matches.push([teams[i], teams[j]]);
+        }
+      }
+
+      const result = [];
+      const teamUsage = new Map(teams.map(team => [team.id, 0]));
+
+      while (matches.length > 0) {
+        matches.sort((a, b) => {
+          const aScore = Math.max(teamUsage.get(a[0].id), teamUsage.get(a[1].id));
+          const bScore = Math.max(teamUsage.get(b[0].id), teamUsage.get(b[1].id));
+          return aScore - bScore;
+        });
+
+        const [teamA, teamB] = matches.shift();
+        result.push([teamA, teamB]);
+        teamUsage.set(teamA.id, result.length);
+        teamUsage.set(teamB.id, result.length);
+      }
+
+      return result;
+    }
+
+    const orderedMatchPairs = roundRobinOrder(teams);
+
     let newMatches = [];
 
-    for (let i = 0; i < teams.length; i++) {
-      for (let j = i + 1; j < teams.length; j++) {
-        console.log(`🔹 Maak match tussen team ${teams[i].id} en ${teams[j].id}`);
+    for (const [teamA, teamB] of orderedMatchPairs) {
+      console.log(`🔹 Maak match tussen team ${teamA.id} en ${teamB.id}`);
 
-        // ✅ Stap 3: Maak de match aan
-        const match = await prisma.match.create({
-          data: {
-            pouleId: pouleId,
-            tournamentId: teams[i].tournamentId, // Haal dit uit het team
-            status: "Scheduled",
-          },
-        });
+      const match = await prisma.match.create({
+        data: {
+          pouleId: pouleId,
+          tournamentId: teamA.tournamentId,
+          status: "Scheduled",
+        },
+      });
 
-        console.log("✅ Wedstrijd aangemaakt:", match);
-
-        if (!match) {
-          console.log("⛔️ Fout bij het aanmaken van de wedstrijd.");
-          continue; // Sla deze iteratie over als de match niet aangemaakt is
-        }
-
-        // ✅ Stap 4: Koppel teams aan de match
-        await prisma.teamsInMatch.createMany({
-          data: [
-            { matchId: match.id, teamId: teams[i].id },
-            { matchId: match.id, teamId: teams[j].id },
-          ],
-        });
-
-        console.log(`✅ Teams ${teams[i].id} en ${teams[j].id} gekoppeld aan match ${match.id}`);
-
-        newMatches.push(match);
+      if (!match) {
+        console.log("⛔️ Fout bij het aanmaken van de wedstrijd.");
+        continue;
       }
+
+      await prisma.teamsInMatch.createMany({
+        data: [
+          { matchId: match.id, teamId: teamA.id },
+          { matchId: match.id, teamId: teamB.id },
+        ],
+      });
+
+      console.log(`✅ Teams ${teamA.id} en ${teamB.id} gekoppeld aan match ${match.id}`);
+
+      newMatches.push(match);
     }
 
     console.log("✅ Alle wedstrijden succesvol gegenereerd!");
