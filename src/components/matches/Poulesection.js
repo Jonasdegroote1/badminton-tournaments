@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import MatchCard from "./MatchCard";
-import LoadingShuttlecock from "@/components/LoadingShuttlecock";
 import "../../styles/components/PouleSection.css";
 
 // Fetcher voor SWR
@@ -12,7 +11,7 @@ const PouleSection = ({ poule }) => {
   const contentRef = useRef(null);
 
   // Haal de matches op via SWR, maar alleen als de poule geopend is
-  const { data: matches = [], error, isLoading, mutate } = useSWR(
+  const { data: matches = [], error, isLoading } = useSWR(
     isOpen && poule ? `/api/matches?pouleId=${poule.id}` : null, // Haal matches alleen op als de poule geopend is
     fetcher,
     {
@@ -23,6 +22,7 @@ const PouleSection = ({ poule }) => {
     }
   );
 
+  // Functie om matches te genereren
   const handleGenerateMatches = async () => {
     try {
       const res = await fetch("/api/generate-matches", {
@@ -31,17 +31,19 @@ const PouleSection = ({ poule }) => {
         body: JSON.stringify({ pouleId: poule.id }),
       });
       if (!res.ok) throw new Error("Failed to generate matches");
-      mutate(); // Herlaad de matches direct na genereren
+      // Herlaad de matches direct na genereren
+      mutate(`/api/matches?pouleId=${poule.id}`);
     } catch (err) {
       console.error("Error generating matches:", err);
     }
   };
 
+  // Functie om de poule in- of uit te klappen
   const toggleOpen = () => {
     setIsOpen((prevState) => !prevState);
   };
 
-  // Sorteer de matches
+  // Sorteer de matches op basis van of ze gespeeld zijn of niet
   const sortMatches = (matches) => {
     return [...matches].sort((a, b) => {
       const aHasSets = a.setResults && a.setResults.length > 0;
@@ -54,13 +56,13 @@ const PouleSection = ({ poule }) => {
     });
   };
 
-  // Sorteer de matches nadat ze zijn geladen
+  // Gebruik useEffect om de matches te sorteren zodra ze zijn opgehaald of geüpdatet
   useEffect(() => {
     if (matches.length > 0) {
       const sortedMatches = sortMatches(matches);
-      mutate(sortedMatches, false); // Werk de matches bij in SWR zonder opnieuw te fetchen
+      mutate(`/api/matches?pouleId=${poule.id}`, sortedMatches, false); // Werk de matches bij in SWR zonder opnieuw te fetchen
     }
-  }, [matches, mutate]);
+  }, [matches, poule.id]);
 
   return (
     <div className="poule-section">
@@ -76,13 +78,14 @@ const PouleSection = ({ poule }) => {
         ref={contentRef}
         className={`poule-content ${isOpen ? "open" : "closed"}`}
       >
+        {/* Knop voor het genereren van matches */}
         <button className="create-match-button" onClick={handleGenerateMatches}>
           + create matches
         </button>
 
         <div className="matches-list">
           {isLoading ? (
-            <LoadingShuttlecock />
+            <p>Loading...</p>
           ) : matches.length > 0 ? (
             matches.map((match, index) => (
               <MatchCard key={match.id} match={match} index={index} />
