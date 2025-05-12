@@ -19,21 +19,35 @@ const PouleSection = ({ poule }) => {
     isOpen ? `/api/matches?pouleId=${poule.id}` : null,
     fetcher,
     {
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
-      refreshInterval: 5000, // Poll elke 5 sec. voor updates
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshInterval: 0,
     }
   );
+
+  const handleGenerateMatches = async () => {
+    try {
+      const res = await fetch("/api/generate-matches", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pouleId: poule.id }),
+      });
+      if (!res.ok) throw new Error("Failed to generate matches");
+      mutate(); // Herlaad de matches na genereren
+    } catch (err) {
+      console.error("Error generating matches:", err);
+    }
+  };
 
   const toggleOpen = () => {
     setIsOpen((prevState) => !prevState);
   };
 
+  // Sorteer: eerst ongespeelde (zonder setResults), dan gespeelde
   const sortedMatches = [...matches].sort((a, b) => {
-    const aPlayed = a.setResults?.length > 0;
-    const bPlayed = b.setResults?.length > 0;
-    if (aPlayed === bPlayed) return 0;
-    return aPlayed ? 1 : -1; // Gespeelde wedstrijden onderaan
+    const aHasSets = a.setResults && a.setResults.length > 0;
+    const bHasSets = b.setResults && b.setResults.length > 0;
+    return aHasSets - bHasSets;
   });
 
   return (
@@ -50,6 +64,10 @@ const PouleSection = ({ poule }) => {
         ref={contentRef}
         className={`poule-content ${isOpen ? "open" : "closed"}`}
       >
+        <button className="create-match-button" onClick={handleGenerateMatches}>
+          + create matches
+        </button>
+
         <div className="matches-list">
           {isLoading ? (
             <LoadingShuttlecock />
