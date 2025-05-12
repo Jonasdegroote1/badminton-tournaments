@@ -1,9 +1,8 @@
-"use client";
-
 import { calculateStandings } from "@/lib/calculateStandings";
 import "@/styles/components/standingsTable.css";
 import useSWR from "swr";
 
+// Fetcher voor SWR
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function StandingsTable({ poule }) {
