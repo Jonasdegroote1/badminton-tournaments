@@ -43,11 +43,17 @@ const PouleSection = ({ poule }) => {
     setIsOpen((prevState) => !prevState);
   };
 
-  // Sorteer: eerst ongespeelde (zonder setResults), dan gespeelde
+  // Sorteer de matches: Eerst ongespeeld (zonder setResults), daarna gespeeld (met setResults)
   const sortedMatches = [...matches].sort((a, b) => {
     const aHasSets = a.setResults && a.setResults.length > 0;
     const bHasSets = b.setResults && b.setResults.length > 0;
-    return aHasSets - bHasSets;
+
+    if (aHasSets === bHasSets) {
+      return 0; // Geen verandering in volgorde als beide dezelfde setstatus hebben
+    }
+
+    // Ongepeelde matches bovenaan
+    return aHasSets ? 1 : -1; 
   });
 
   return (
@@ -77,7 +83,7 @@ const PouleSection = ({ poule }) => {
                 key={match.id}
                 match={match}
                 index={index}
-                onUpdate={mutate}
+                onUpdate={mutate} // Update de matches na wijzigingen
               />
             ))
           ) : (
