@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import useSWR from "swr";
 import MatchCard from "./MatchCard";
 import LoadingShuttlecock from "@/components/LoadingShuttlecock";
@@ -10,6 +10,7 @@ const PouleSection = ({ poule }) => {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef(null);
 
+  // Zorg ervoor dat we de matches opnieuw ophalen als het openen van de poule verandert
   const {
     data: matches = [],
     error,
@@ -25,6 +26,7 @@ const PouleSection = ({ poule }) => {
     }
   );
 
+  // Deze functie genereert de matches, maar we willen ook de matches daarna herladen
   const handleGenerateMatches = async () => {
     try {
       const res = await fetch("/api/generate-matches", {
@@ -33,7 +35,7 @@ const PouleSection = ({ poule }) => {
         body: JSON.stringify({ pouleId: poule.id }),
       });
       if (!res.ok) throw new Error("Failed to generate matches");
-      mutate(); // Herlaad de matches na genereren
+      mutate(); // Herlaad de matches na het genereren
     } catch (err) {
       console.error("Error generating matches:", err);
     }
@@ -43,18 +45,26 @@ const PouleSection = ({ poule }) => {
     setIsOpen((prevState) => !prevState);
   };
 
-  // Sorteer de matches: Eerst ongespeeld (zonder setResults), daarna gespeeld (met setResults)
+  // Sorteer de matches op basis van het feit of setResults leeg is of niet
   const sortedMatches = [...matches].sort((a, b) => {
     const aHasSets = a.setResults && a.setResults.length > 0;
     const bHasSets = b.setResults && b.setResults.length > 0;
 
+    // Als beide matches dezelfde status hebben (beide met of zonder sets)
     if (aHasSets === bHasSets) {
-      return 0; // Geen verandering in volgorde als beide dezelfde setstatus hebben
+      return 0; // Geen verandering in volgorde
     }
 
-    // Ongepeelde matches bovenaan
-    return aHasSets ? 1 : -1; 
+    // Ongepeelde matches (zonder sets) komen bovenaan
+    return aHasSets ? 1 : -1;
   });
+
+  // Herlaad de matches telkens als de status verandert (bijvoorbeeld als een score is toegevoegd)
+  useEffect(() => {
+    if (matches.length > 0) {
+      mutate(); // Forceer een herlaad van de data nadat een score is toegevoegd
+    }
+  }, [matches, mutate]);
 
   return (
     <div className="poule-section">
@@ -83,7 +93,7 @@ const PouleSection = ({ poule }) => {
                 key={match.id}
                 match={match}
                 index={index}
-                onUpdate={mutate} // Update de matches na wijzigingen
+                onUpdate={mutate} // Zorg ervoor dat de data wordt ververst na het bijwerken van een match
               />
             ))
           ) : (
