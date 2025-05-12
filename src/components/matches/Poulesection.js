@@ -60,13 +60,14 @@ const PouleSection = ({ poule }) => {
           {isOpen ? "▲ Close" : "▼ Open"}
         </button>
       </div>
-        <button className="create-match-button" onClick={handleGenerateMatches}>
-          + create matches
-        </button>
       <div
         ref={contentRef}
         className={`poule-content ${isOpen ? "open" : "closed"}`}
       >
+        <button className="create-match-button" onClick={handleGenerateMatches}>
+          + create matches
+        </button>
+        
         <div className="matches-list">
           {isLoading ? (
             <LoadingShuttlecock />
