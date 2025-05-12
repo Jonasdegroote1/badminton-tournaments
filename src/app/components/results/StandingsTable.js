@@ -6,6 +6,9 @@ import useSWR from "swr";
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function StandingsTable({ poule }) {
+  // Debugging: Log de poule die wordt doorgegeven
+  console.log("Poule in StandingsTable:", poule);
+
   const { data: matches = [], error, isLoading, mutate } = useSWR(
     poule?.id ? `/api/matches?pouleId=${poule.id}` : null,
     fetcher,
@@ -15,9 +18,23 @@ export default function StandingsTable({ poule }) {
     }
   );
 
-  if (!poule) return <p>Geen poule geselecteerd.</p>;
-  if (isLoading) return <p>Standings laden...</p>;
-  if (error) return <p>Fout bij laden van wedstrijden.</p>;
+  if (!poule || !poule.id) {
+    console.log("Geen poule geselecteerd.");
+    return <p>Geen poule geselecteerd.</p>;
+  }
+
+  if (isLoading) {
+    console.log("Standings worden geladen...");
+    return <p>Standings laden...</p>;
+  }
+
+  if (error) {
+    console.error("Fout bij laden van wedstrijden:", error);
+    return <p>Fout bij laden van wedstrijden.</p>;
+  }
+
+  // Debugging: Log de ontvangen matches
+  console.log("Matches data:", matches);
 
   const results = calculateStandings([{ ...poule, matches }]);
 
