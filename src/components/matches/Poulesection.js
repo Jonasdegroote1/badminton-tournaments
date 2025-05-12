@@ -46,13 +46,15 @@ const PouleSection = ({ poule }) => {
     }
   }, [poule.id, isOpen]);
 
-  // Sorteer de matches op basis van sets (gespeeld of niet gespeeld)
+  // Sorteer de matches zodat de niet gespeelde bovenaan staan en de gespeelde onderaan
   const sortedMatches = [...matches].sort((a, b) => {
     const aHasSets = a.setResults && a.setResults.length > 0;
     const bHasSets = b.setResults && b.setResults.length > 0;
 
-    // Gespeelde matches eerst, dan te spelen matches
-    return aHasSets === bHasSets ? 0 : aHasSets ? -1 : 1;
+    // Te spelen matches bovenaan (zonder sets), gespeelde onderaan (met sets)
+    if (aHasSets && !bHasSets) return 1; // a is gespeeld, b niet, dus a komt onder b
+    if (!aHasSets && bHasSets) return -1; // a is niet gespeeld, b wel, dus a komt boven b
+    return 0; // Als beide hetzelfde zijn, blijf dan de volgorde behouden
   });
 
   return (
