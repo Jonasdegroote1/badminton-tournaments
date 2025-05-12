@@ -23,9 +23,6 @@ export default function ResultsViewer({ tournament }) {
     }
   );
 
-  // Debugging: Log de ontvangen tournament en poules
-  console.log("Tournament:", tournament);
-  console.log("Poules:", poules);
 
   if (!tournament) return <p>Geen toernooi geselecteerd.</p>;
   if (error) return <p>Fout bij ophalen van poules.</p>;
@@ -44,10 +41,6 @@ export default function ResultsViewer({ tournament }) {
 
   const selectedPoule = poules.find((p) => p.id === selectedPouleId);
 
-  // Debugging: Log de geselecteerde poule
-  console.log("Selected Poule ID:", selectedPouleId);
-  console.log("Selected Poule:", selectedPoule);
-
   return (
     <div className="results-viewer">
       <PouleSelector poules={poules} onSelectPouleId={setSelectedPouleId} />
@@ -58,7 +51,7 @@ export default function ResultsViewer({ tournament }) {
           <p><strong>Sterkte:</strong> {selectedPoule.strength?.name || "-"}</p>
           <p><strong>Aantal teams:</strong> {selectedPoule.teams?.length || 0}</p>
 
-          <StandingsTable poule={selectedPoule} />
+          <StandingsTable standings={selectedPoule} />
         </div>
       )}
     </div>
