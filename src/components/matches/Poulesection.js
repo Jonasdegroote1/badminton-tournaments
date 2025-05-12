@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import useSWR from "swr";
 import MatchCard from "./MatchCard";
-import LoadingShuttlecock from "@components/LoadingShuttlecock";
+import LoadingShuttlecock from "@/components/LoadingShuttlecock";
 import "../../styles/components/PouleSection.css";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
