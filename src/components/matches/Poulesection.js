@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import useSWR from "swr";
 import MatchCard from "./MatchCard";
 import LoadingShuttlecock from "@/components/LoadingShuttlecock";
-import StandingsTable from "@/app/components/results/StandingsTable";
 import "../../styles/components/PouleSection.css";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -84,11 +83,6 @@ const PouleSection = ({ poule }) => {
           ) : (
             <p>No matches generated yet.</p>
           )}
-        </div>
-
-        <div className="standings-section">
-          <h3>Standings</h3>
-          <StandingsTable standings={standings} />
         </div>
       </div>
     </div>
