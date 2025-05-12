@@ -14,15 +14,8 @@ export default function ResultsViewer({ tournament }) {
 
   const { data: poules, error, isLoading } = useSWR(
     tournament ? `/api/poules?tournamentId=${tournament.id}` : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateIfStale: false,
-      refreshInterval: 0
-    }
+    fetcher
   );
-
 
   if (!tournament) return <p>Geen toernooi geselecteerd.</p>;
   if (error) return <p>Fout bij ophalen van poules.</p>;
