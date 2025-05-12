@@ -3,7 +3,6 @@ import useSWR from "swr";
 import MatchCard from "./MatchCard";
 import LoadingShuttlecock from "@/components/LoadingShuttlecock";
 import StandingsTable from "@/app/components/results/StandingsTable";
-import { calculateStandings } from "@/lib/calculateStandings";
 import "../../styles/components/PouleSection.css";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -51,13 +50,6 @@ const PouleSection = ({ poule }) => {
     if (aPlayed === bPlayed) return 0;
     return aPlayed ? 1 : -1;
   });
-
-  const standings = calculateStandings([
-    {
-      ...poule,
-      matches: matches,
-    },
-  ]);
 
   return (
     <div className="poule-section">
