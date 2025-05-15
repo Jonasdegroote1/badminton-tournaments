@@ -31,6 +31,7 @@ export default function ResultsViewer({ tournament }) {
   }
 
   if (!poules || poules.length === 0) return <p>Geen poules gevonden.</p>;
+  console.log("Gelaadde poules:", poules);
 
   const selectedPoule = poules.find((p) => p.id === selectedPouleId);
 
