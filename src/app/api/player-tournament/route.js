@@ -7,40 +7,45 @@ export async function POST(req) {
     const session = await getServerSession(req, authOptions);
 
     if (!session || session.user.roleId !== 1) {
-      return new Response(JSON.stringify({ error: "Geen toegang" }), {
-        status: 403,
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
     }
 
     const body = await req.json();
     const { playerId, tournamentId } = body;
 
     if (!playerId || !tournamentId) {
-      return new Response(JSON.stringify({ error: "playerId en tournamentId zijn vereist." }), {
+      return new Response(JSON.stringify({ error: "playerId en tournamentId zijn verplicht." }), {
         status: 400,
-        headers: { "Content-Type": "application/json" },
       });
     }
 
-    const created = await prisma.playerTournament.create({
+    // Controleer of speler al is toegevoegd aan dit toernooi
+    const existing = await prisma.playerTournament.findFirst({
+      where: {
+        playerId,
+        tournamentId,
+      },
+    });
+
+    if (existing) {
+      return new Response(JSON.stringify({ error: "Speler is al toegevoegd aan dit toernooi." }), {
+        status: 400,
+      });
+    }
+
+    const playerTournament = await prisma.playerTournament.create({
       data: {
         playerId,
         tournamentId,
       },
     });
 
-    return new Response(JSON.stringify(created), {
-      status: 201,
-      headers: { "Content-Type": "application/json" },
-    });
-
-  } catch (error) {
-    console.error("❌ Interne serverfout:", error);
-
-    return new Response(JSON.stringify({ error: "Interne serverfout" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(playerTournament), { status: 201 });
+  } catch (err) {
+    console.error("❌ Fout in /api/player-tournament:", err);
+    return new Response(
+      JSON.stringify({ error: "Interne serverfout bij toevoegen speler." }),
+      { status: 500 }
+    );
   }
 }
