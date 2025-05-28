@@ -37,20 +37,30 @@ export async function DELETE(request) {
       return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
     }
 
-    const { playerId, tournamentId } = await request.json();
+    const { searchParams } = new URL(request.url);
+    const playerId = parseInt(searchParams.get("playerId"));
+    const tournamentId = parseInt(searchParams.get("tournamentId"));
 
-    const deleted = await prisma.playerTournament.deleteMany({
+    if (!playerId || !tournamentId) {
+      return new Response(JSON.stringify({ error: "playerId en tournamentId zijn verplicht." }), {
+        status: 400,
+      });
+    }
+
+    await prisma.playerTournament.deleteMany({
       where: {
         playerId,
         tournamentId,
       },
     });
 
-    return new Response(JSON.stringify({ deletedCount: deleted.count }), { status: 200 });
+    return new Response(JSON.stringify({ message: "Speler succesvol verwijderd uit toernooi." }), {
+      status: 200,
+    });
   } catch (error) {
     console.error("❌ Fout in DELETE /api/player-tournament:", error);
     return new Response(
-      JSON.stringify({ error: "Interne serverfout." }),
+      JSON.stringify({ error: "Interne serverfout bij verwijderen speler." }),
       { status: 500 }
     );
   }
