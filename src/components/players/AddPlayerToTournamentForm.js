@@ -25,31 +25,41 @@ export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPla
   }, [tournamentId]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedPlayerId) return;
+  e.preventDefault();
+  if (!selectedPlayerId) return;
 
-    setLoading(true);
-    setError(null);
+  const payload = {
+    playerId: parseInt(selectedPlayerId),
+    tournamentId,
+  };
 
-    try {
-      const res = await fetch("/api/player-tournament", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          playerId: parseInt(selectedPlayerId),
-          tournamentId,
-        }),
-      });
+  console.log("➡️ Verstuurde data naar /api/player-tournament:", payload);
 
-      if (!res.ok) {
-        let err = { error: "Fout bij toevoegen speler." };
-        try {
-          err = await res.json();
-        } catch (jsonError) {
-          console.error("Fout bij uitlezen foutbericht:", jsonError);
-        }
-        throw new Error(err.error);
-      }
+  setLoading(true);
+  try {
+    const res = await fetch("/api/player-tournament", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+      const added = await res.json();
+      console.log("✅ Response van server:", added);
+      const addedPlayer = availablePlayers.find(p => p.id === added.playerId);
+      onPlayerAdded(addedPlayer);
+      onClose();
+    } else {
+      const err = await res.json();
+      console.error("❌ Fout response van server:", err);
+      setError(err.error || "Fout bij toevoegen speler.");
+    }
+  } catch (error) {
+    console.error("❌ Fout tijdens fetch:", error);
+    setError("Fout tijdens communicatie met server.");
+  }
+  setLoading(false);
+};
 
       const added = await res.json();
       const addedPlayer = availablePlayers.find((p) => p.id === added.playerId);
