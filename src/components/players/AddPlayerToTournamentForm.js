@@ -12,21 +12,31 @@ export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPla
 
   // Spelers ophalen
   useEffect(() => {
+    if (!tournamentId) return;
+
     fetch(`/api/available-players?tournamentId=${tournamentId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Fout bij ophalen spelers.");
         return res.json();
       })
-      .then((data) => setAvailablePlayers(data))
+      .then((data) => {
+        console.log("📥 Beschikbare spelers opgehaald:", data);
+        setAvailablePlayers(data);
+        setError(null);
+      })
       .catch((err) => {
-        console.error("Fout bij ophalen spelers:", err);
+        console.error("❌ Fout bij ophalen spelers:", err);
         setError("Fout bij ophalen spelers.");
       });
   }, [tournamentId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedPlayerId) return;
+
+    if (!selectedPlayerId) {
+      console.warn("⚠️ Geen speler geselecteerd");
+      return;
+    }
 
     const payload = {
       playerId: parseInt(selectedPlayerId),
@@ -36,6 +46,8 @@ export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPla
     console.log("➡️ Verstuurde data naar /api/player-tournament:", payload);
 
     setLoading(true);
+    setError(null);
+
     try {
       const res = await fetch("/api/player-tournament", {
         method: "POST",
@@ -46,13 +58,13 @@ export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPla
       if (res.ok) {
         const added = await res.json();
         console.log("✅ Response van server:", added);
-        const addedPlayer = availablePlayers.find(p => p.id === added.playerId);
+        const addedPlayer = availablePlayers.find((p) => p.id === added.playerId);
         onPlayerAdded(addedPlayer);
         onClose();
       } else {
-        const err = await res.json();
-        console.error("❌ Fout response van server:", err);
-        setError(err.error || "Fout bij toevoegen speler.");
+        const errRes = await res.json();
+        console.error("❌ Fout response van server:", errRes);
+        setError(errRes.error || "Fout bij toevoegen speler.");
       }
     } catch (error) {
       console.error("❌ Fout tijdens fetch:", error);
