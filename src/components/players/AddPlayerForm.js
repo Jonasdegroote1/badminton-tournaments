@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Modal from "../modal";
-import "../../styles/components/AddPlayerForm.css";  // Behoud eigen form-styling
-import "../../styles/components/btn.css";        // Importeer centrale button-styling
+import "../../styles/components/AddPlayerForm.css";
+import "../../styles/components/btn.css";
 
 export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = [] }) {
   const [firstName, setFirstName] = useState("");
@@ -18,9 +18,7 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
     const fetchClubs = async () => {
       try {
         const response = await fetch("/api/clubs");
-        if (!response.ok) {
-          throw new Error("Fout bij het ophalen van clubs.");
-        }
+        if (!response.ok) throw new Error("Fout bij het ophalen van clubs.");
         const data = await response.json();
         setClubs(data);
       } catch (error) {
@@ -34,33 +32,29 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!firstName || !lastName || !clubId || !mail || !phone) {
-      setError("Alle velden moeten ingevuld worden.");
+    if (!firstName || !lastName) {
+      setError("Voornaam en achternaam zijn verplicht.");
       return;
     }
 
     setLoading(true);
     setError(null);
-    const parsedClubId = parseInt(clubId, 10);
+    const parsedClubId = clubId ? parseInt(clubId, 10) : null;
 
     try {
       const response = await fetch("/api/players", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           firstName,
           lastName,
           clubId: parsedClubId,
-          mail,
-          phone,
+          mail: mail || null,
+          phone: phone || null,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Er is een fout opgetreden bij het toevoegen van de speler.");
-      }
+      if (!response.ok) throw new Error("Er is een fout opgetreden bij het toevoegen van de speler.");
 
       const newPlayer = await response.json();
       onPlayerAdded(newPlayer);
@@ -103,7 +97,6 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
             <select
               value={clubId}
               onChange={(e) => setClubId(e.target.value)}
-              required
             >
               <option value="">Selecteer een club</option>
               {clubs.map((club) => (
@@ -120,7 +113,6 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
               type="email"
               value={mail}
               onChange={(e) => setMail(e.target.value)}
-              required
             />
           </div>
 
@@ -130,7 +122,6 @@ export default function AddPlayerForm({ onClose, onPlayerAdded, tournaments = []
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              required
             />
           </div>
 
