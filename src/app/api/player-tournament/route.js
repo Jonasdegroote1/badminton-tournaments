@@ -28,3 +28,30 @@ export async function POST(request) {
     );
   }
 }
+
+export async function DELETE(request) {
+  try {
+    const session = await getServerSession({ req: request, ...authOptions });
+
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    }
+
+    const { playerId, tournamentId } = await request.json();
+
+    const deleted = await prisma.playerTournament.deleteMany({
+      where: {
+        playerId,
+        tournamentId,
+      },
+    });
+
+    return new Response(JSON.stringify({ deletedCount: deleted.count }), { status: 200 });
+  } catch (error) {
+    console.error("❌ Fout in DELETE /api/player-tournament:", error);
+    return new Response(
+      JSON.stringify({ error: "Interne serverfout." }),
+      { status: 500 }
+    );
+  }
+}
