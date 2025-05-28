@@ -13,13 +13,16 @@ export async function POST(req) {
     const body = await req.json();
     const { playerId, tournamentId } = body;
 
+    // 👇 Log de ontvangen data
+    console.log("📦 Ontvangen POST data:", { playerId, tournamentId });
+
     if (!playerId || !tournamentId) {
       return new Response(JSON.stringify({ error: "playerId en tournamentId zijn verplicht." }), {
         status: 400,
       });
     }
 
-    // Controleer of speler al is toegevoegd aan dit toernooi
+    // Controleer of speler al gekoppeld is
     const existing = await prisma.playerTournament.findFirst({
       where: {
         playerId,
