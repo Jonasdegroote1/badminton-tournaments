@@ -25,6 +25,16 @@ export async function POST(req) {
       );
     }
 
+    const playerExists = await prisma.player.findUnique({ where: { id: playerIdNum } });
+    const tournamentExists = await prisma.tournament.findUnique({ where: { id: tournamentIdNum } });
+
+    if (!playerExists || !tournamentExists) {
+      return new Response(
+        JSON.stringify({ error: "Player of Tournament bestaat niet." }),
+        { status: 400 }
+      );
+    }
+
     const existing = await prisma.playerTournament.findFirst({
       where: {
         playerId: playerIdNum,
@@ -38,6 +48,8 @@ export async function POST(req) {
         { status: 400 }
       );
     }
+
+    console.log("Proberen playerTournament aan te maken met:", { playerId: playerIdNum, tournamentId: tournamentIdNum });
 
     const playerTournament = await prisma.playerTournament.create({
       data: {
