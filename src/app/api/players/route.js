@@ -55,9 +55,15 @@ export async function POST(request) {
   const { firstName, lastName, clubId, mail, phone } = await request.json();
 
   try {
-    const player = await prisma.player.create({
-      data: { firstName, lastName, clubId, mail, phone },
-    });
+    const data = {
+      firstName,
+      lastName,
+      ...(clubId ? { clubId } : {}),
+      ...(mail ? { mail } : {}),
+      ...(phone ? { phone } : {}),
+    };
+
+    const player = await prisma.player.create({ data });
 
     console.log('Player created in database:', player);
 
@@ -72,6 +78,7 @@ export async function POST(request) {
     });
   }
 }
+
 
 export async function PUT(request) {
 
