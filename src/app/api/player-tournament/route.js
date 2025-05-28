@@ -1,69 +1,21 @@
 import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function POST(req) {
   try {
-    const session = await getServerSession(req, authOptions);
-
-    if (!session || session.user.roleId !== 1) {
-      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
-    }
-
-    const body = await req.json();
-    const { playerId, tournamentId } = body;
-
-    console.log("📦 Ontvangen POST data:", body);
-
-    const playerIdNum = Number(playerId);
-    const tournamentIdNum = Number(tournamentId);
-
-    if (!playerIdNum || !tournamentIdNum) {
-      return new Response(
-        JSON.stringify({ error: "playerId en tournamentId moeten geldige nummers zijn." }),
-        { status: 400 }
-      );
-    }
-
-    const playerExists = await prisma.player.findUnique({ where: { id: playerIdNum } });
-    const tournamentExists = await prisma.tournament.findUnique({ where: { id: tournamentIdNum } });
-
-    if (!playerExists || !tournamentExists) {
-      return new Response(
-        JSON.stringify({ error: "Player of Tournament bestaat niet." }),
-        { status: 400 }
-      );
-    }
-
-    const existing = await prisma.playerTournament.findFirst({
-      where: {
-        playerId: playerIdNum,
-        tournamentId: tournamentIdNum,
-      },
-    });
-
-    if (existing) {
-      return new Response(
-        JSON.stringify({ error: "Speler is al toegevoegd aan dit toernooi." }),
-        { status: 400 }
-      );
-    }
-
-    console.log("Proberen playerTournament aan te maken met:", { playerId: playerIdNum, tournamentId: tournamentIdNum });
+    const { playerId, tournamentId } = await req.json();
 
     const playerTournament = await prisma.playerTournament.create({
       data: {
-        playerId: playerIdNum,
-        tournamentId: tournamentIdNum,
+        playerId,
+        tournamentId,
       },
     });
 
     return new Response(JSON.stringify(playerTournament), { status: 201 });
-  } catch (err) {
-    console.error("❌ Fout in /api/player-tournament:", err);
-    if (err.stack) console.error(err.stack);
+  } catch (error) {
+    console.error("Error in POST /api/player-tournament:", error);
     return new Response(
-      JSON.stringify({ error: "Interne serverfout bij toevoegen speler." }),
+      JSON.stringify({ error: "Interne serverfout." }),
       { status: 500 }
     );
   }
