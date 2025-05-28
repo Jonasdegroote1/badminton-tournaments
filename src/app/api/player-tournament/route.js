@@ -2,62 +2,66 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 
-export async function POST(req) {
-  const session = await getServerSession(req, authOptions);
-  
-  if (!session || session.user.roleId !== 1) {
-    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
-  }
-
-  const body = await req.json();
-  const { poolId } = body;
-
+export async function POST(request) {
   try {
-    const teams = await prisma.team.findMany({ where: { poolId } });
+    const session = await getServerSession({ req: request, ...authOptions });
 
-    if (teams.length < 2) {
-      return new Response(JSON.stringify({ message: "Not enough teams to generate matches." }), { status: 400 });
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
     }
 
-    let matches = [];
-    for (let i = 0; i < teams.length; i++) {
-      for (let j = i + 1; j < teams.length; j++) {
-        matches.push({
-          poolId,
-          team1Id: teams[i].id,
-          team2Id: teams[j].id,
-          status: "Scheduled",
-        });
-      }
-    }
+    const { playerId, tournamentId } = await request.json();
 
-    const existingMatches = await prisma.match.findMany({
-      where: {
-        poolId,
-        OR: matches.map((match) => ({
-          AND: [
-            { team1Id: match.team1Id },
-            { team2Id: match.team2Id },
-          ],
-        })),
+    const playerTournament = await prisma.playerTournament.create({
+      data: {
+        playerId,
+        tournamentId,
       },
     });
 
-    const newMatches = matches.filter(
-      (match) =>
-        !existingMatches.some(
-          (existing) =>
-            (existing.team1Id === match.team1Id && existing.team2Id === match.team2Id) ||
-            (existing.team1Id === match.team2Id && existing.team2Id === match.team1Id)
-        )
+    return new Response(JSON.stringify(playerTournament), { status: 201 });
+  } catch (error) {
+    console.error("❌ Fout in POST /api/player-tournament:", error);
+    return new Response(
+      JSON.stringify({ error: "Interne serverfout." }),
+      { status: 500 }
     );
+  }
+}
 
-    if (newMatches.length > 0) {
-      await prisma.match.createMany({ data: newMatches });
+export async function DELETE(request) {
+  try {
+    const session = await getServerSession({ req: request, ...authOptions });
+
+    if (!session || session.user.roleId !== 1) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
     }
 
-    return new Response(JSON.stringify({ message: "Matches generated successfully", matches: newMatches }), { status: 201 });
+    const { searchParams } = new URL(request.url);
+    const playerId = parseInt(searchParams.get("playerId"));
+    const tournamentId = parseInt(searchParams.get("tournamentId"));
+
+    if (!playerId || !tournamentId) {
+      return new Response(JSON.stringify({ error: "playerId en tournamentId zijn verplicht." }), {
+        status: 400,
+      });
+    }
+
+    await prisma.playerTournament.deleteMany({
+      where: {
+        playerId,
+        tournamentId,
+      },
+    });
+
+    return new Response(JSON.stringify({ message: "Speler succesvol verwijderd uit toernooi." }), {
+      status: 200,
+    });
   } catch (error) {
-    return new Response(JSON.stringify({ message: "Error generating matches", error }), { status: 500 });
+    console.error("❌ Fout in DELETE /api/player-tournament:", error);
+    return new Response(
+      JSON.stringify({ error: "Interne serverfout bij verwijderen speler." }),
+      { status: 500 }
+    );
   }
 }

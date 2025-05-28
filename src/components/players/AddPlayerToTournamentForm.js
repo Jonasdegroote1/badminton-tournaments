@@ -10,32 +10,65 @@ export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPla
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Spelers ophalen
   useEffect(() => {
+    if (!tournamentId) return;
+
     fetch(`/api/available-players?tournamentId=${tournamentId}`)
-      .then((res) => res.json())
-      .then((data) => setAvailablePlayers(data))
-      .catch(() => setError("Fout bij ophalen spelers."));
+      .then((res) => {
+        if (!res.ok) throw new Error("Fout bij ophalen spelers.");
+        return res.json();
+      })
+      .then((data) => {
+        console.log("📥 Beschikbare spelers opgehaald:", data);
+        setAvailablePlayers(data);
+        setError(null);
+      })
+      .catch((err) => {
+        console.error("❌ Fout bij ophalen spelers:", err);
+        setError("Fout bij ophalen spelers.");
+      });
   }, [tournamentId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedPlayerId) return;
+
+    if (!selectedPlayerId) {
+      console.warn("⚠️ Geen speler geselecteerd");
+      return;
+    }
+
+    const payload = {
+      playerId: parseInt(selectedPlayerId),
+      tournamentId,
+    };
+
+    console.log("➡️ Verstuurde data naar /api/player-tournament:", payload);
 
     setLoading(true);
-    const res = await fetch("/api/player-tournament", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ playerId: parseInt(selectedPlayerId), tournamentId }),
-    });
+    setError(null);
 
-    if (res.ok) {
-      const added = await res.json();
-      const addedPlayer = availablePlayers.find(p => p.id === added.playerId);
-      onPlayerAdded(addedPlayer);
-      onClose();
-    } else {
-      const err = await res.json();
-      setError(err.error || "Fout bij toevoegen speler.");
+    try {
+      const res = await fetch("/api/player-tournament", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const added = await res.json();
+        console.log("✅ Response van server:", added);
+        const addedPlayer = availablePlayers.find((p) => p.id === added.playerId);
+        onPlayerAdded(addedPlayer);
+        onClose();
+      } else {
+        const errRes = await res.json();
+        console.error("❌ Fout response van server:", errRes);
+        setError(errRes.error || "Fout bij toevoegen speler.");
+      }
+    } catch (error) {
+      console.error("❌ Fout tijdens fetch:", error);
+      setError("Fout tijdens communicatie met server.");
     }
     setLoading(false);
   };
@@ -62,11 +95,7 @@ export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPla
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? "Toevoegen..." : "Toevoegen"}
             </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={onClose}
-            >
+            <button type="button" className="btn btn-secondary" onClick={onClose}>
               Annuleren
             </button>
           </div>
