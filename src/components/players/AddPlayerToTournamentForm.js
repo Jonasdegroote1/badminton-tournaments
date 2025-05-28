@@ -25,52 +25,40 @@ export default function AddPlayerToTournamentForm({ tournamentId, onClose, onPla
   }, [tournamentId]);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!selectedPlayerId) return;
+    e.preventDefault();
+    if (!selectedPlayerId) return;
 
-  const payload = {
-    playerId: parseInt(selectedPlayerId),
-    tournamentId,
-  };
+    const payload = {
+      playerId: parseInt(selectedPlayerId),
+      tournamentId,
+    };
 
-  console.log("➡️ Verstuurde data naar /api/player-tournament:", payload);
+    console.log("➡️ Verstuurde data naar /api/player-tournament:", payload);
 
-  setLoading(true);
-  try {
-    const res = await fetch("/api/player-tournament", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    setLoading(true);
+    try {
+      const res = await fetch("/api/player-tournament", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    if (res.ok) {
-      const added = await res.json();
-      console.log("✅ Response van server:", added);
-      const addedPlayer = availablePlayers.find(p => p.id === added.playerId);
-      onPlayerAdded(addedPlayer);
-      onClose();
-    } else {
-      const err = await res.json();
-      console.error("❌ Fout response van server:", err);
-      setError(err.error || "Fout bij toevoegen speler.");
+      if (res.ok) {
+        const added = await res.json();
+        console.log("✅ Response van server:", added);
+        const addedPlayer = availablePlayers.find(p => p.id === added.playerId);
+        onPlayerAdded(addedPlayer);
+        onClose();
+      } else {
+        const err = await res.json();
+        console.error("❌ Fout response van server:", err);
+        setError(err.error || "Fout bij toevoegen speler.");
+      }
+    } catch (error) {
+      console.error("❌ Fout tijdens fetch:", error);
+      setError("Fout tijdens communicatie met server.");
     }
-  } catch (error) {
-    console.error("❌ Fout tijdens fetch:", error);
-    setError("Fout tijdens communicatie met server.");
-  }
-  setLoading(false);
-};
-
-      const added = await res.json();
-      const addedPlayer = availablePlayers.find((p) => p.id === added.playerId);
-      onPlayerAdded(addedPlayer);
-      onClose();
-    } catch (err) {
-      console.error("❌ Fout bij toevoegen speler:", err);
-      setError(err.message || "Onbekende fout.");
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   return (
